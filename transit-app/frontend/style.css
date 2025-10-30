@@ -1,0 +1,208 @@
+/* CSS Variables */
+:root {
+    --primary-blue: #233962;
+    --secondary-blue: #38568c;
+    --primary-orange: #ed7d2b;
+    --secondary-orange: #e2893f;
+    --accent-gray: #6c757d;
+    --light-bg: #f8f9fa;
+    --dark-text: #2c3e50;
+    --muted-text: #7f8c8d;
+    --border-radius: 1rem;
+    --shadow-light: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --shadow-medium: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    --shadow-large: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+}
+
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', 'Arial', sans-serif;
+    line-height: 1.6;
+    color: var(--dark-text);
+    background-color: #ffffff;
+}
+
+/* Search Bar */
+.search-bar-section {
+    background: var(--primary-blue);
+    box-shadow: var(--shadow-medium);
+}
+
+.search-bar-section .form-control {
+    border: none !important;
+}
+
+.search-bar-section .form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(56, 86, 140, 0.25) !important;
+    border: none !important;
+}
+
+.search-bar-section .btn:hover {
+    background-color: #f8f9fa !important;
+}
+
+/* Navigation */
+.navbar {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95) !important;
+    box-shadow: var(--shadow-light);
+    border-bottom: 1px solid rgba(35, 57, 98, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--primary-blue) !important;
+}
+
+.nav-link {
+    font-weight: 500;
+    position: relative;
+    color: var(--primary-blue) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nav-link:hover {
+    color: var(--secondary-blue) !important;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 50%;
+    background-color: var(--primary-orange);
+    transform: translateX(-50%);
+}
+
+.nav-link:hover::after {
+    width: 80%;
+}
+
+/* Hero Section */
+.hero-section {
+    background-image: url('images/People waiting for bus at bus stop.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+.text-white-75 {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.min-vh-60 {
+    min-height: 60vh;
+}
+
+/* Services Section */
+.services-section {
+    background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+}
+
+.service-card {
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.shadow-hover {
+    box-shadow: var(--shadow-light);
+}
+
+.service-card:hover .shadow-hover {
+    box-shadow: var(--shadow-large);
+}
+
+.service-icon a {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.service-icon a:hover {
+    transform: scale(1.1);
+}
+
+.service-icon a:hover .icon-circle {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Buttons */
+.btn {
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover {
+    box-shadow: var(--shadow-medium);
+}
+
+/* Updates Section */
+.update-item {
+    border-left: 4px solid transparent;
+}
+
+/* Footer */
+.bg-dark {
+    background: linear-gradient(135deg, #212529 0%, #343a40 100%) !important;
+}
+
+/* Utility Classes */
+.rounded-4 {
+    border-radius: 1.5rem !important;
+}
+
+.text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.backdrop-blur {
+    backdrop-filter: blur(10px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 50vh;
+        text-align: center;
+    }
+    
+    .display-4 {
+        font-size: 2.5rem;
+    }
+    
+    .nav-link {
+        letter-spacing: 0.3px;
+    }
+}
