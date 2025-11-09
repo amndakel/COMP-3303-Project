@@ -21,12 +21,30 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+}
+
 body {
     font-family: 'Roboto', 'Arial', sans-serif;
     line-height: 1.6;
     color: var(--dark-text);
     background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
 }
+
+.content-wrapper {
+    flex: 1 0 auto;
+}
+
+footer {
+    flex-shrink: 0;
+}
+
+/* ========================================
+   SHARED COMPONENTS (Used on All Pages)
+   ======================================== */
 
 /* Search Bar */
 .search-bar-section {
@@ -87,6 +105,28 @@ body {
 .nav-link:hover::after {
     width: 80%;
 }
+
+/* Footer */
+.bg-dark {
+    background: linear-gradient(135deg, #212529 0%, #343a40 100%) !important;
+}
+
+/* Utility Classes */
+.rounded-4 {
+    border-radius: 1.5rem !important;
+}
+
+.text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.backdrop-blur {
+    backdrop-filter: blur(10px);
+}
+
+/* ========================================
+   HOME PAGE SPECIFIC STYLES
+   ======================================== */
 
 /* Hero Section */
 .hero-section {
@@ -173,25 +213,41 @@ body {
     border-left: 4px solid transparent;
 }
 
-/* Footer */
-.bg-dark {
-    background: linear-gradient(135deg, #212529 0%, #343a40 100%) !important;
+/* ========================================
+   SCHEDULE PAGE SPECIFIC STYLES
+   ======================================== */
+
+/* Route Cards */
+.route-card {
+    background-color: var(--primary-orange);
+    border: none;
+    min-height: 200px;
 }
 
-/* Utility Classes */
-.rounded-4 {
-    border-radius: 1.5rem !important;
+/* Route Icon Colors */
+.route-icon-navy {
+    color: var(--primary-blue);
 }
 
-.text-shadow {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.route-icon-red {
+    color: #dc3545;
 }
 
-.backdrop-blur {
-    backdrop-filter: blur(10px);
+.route-icon-green {
+    color: #1a7f64;
 }
 
-/* Responsive Design */
+.route-icon-pink {
+    color: #d63384;
+}
+
+.route-icon-yellow {
+    color: #ffc107;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
 @media (max-width: 768px) {
     .hero-section {
         min-height: 50vh;
