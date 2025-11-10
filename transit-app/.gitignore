@@ -1,0 +1,42 @@
+# AMPPS deployment folder
+# This folder is copied to AMPPS www directory for local testing
+# and should not be committed to version control
+/Program Files/
+/Ampps/
+/www/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Node modules (if any)
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Database files (for local development)
+*.db
+*.sqlite
+*.sqlite3

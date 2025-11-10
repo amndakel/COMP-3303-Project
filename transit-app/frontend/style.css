@@ -246,6 +246,26 @@ footer {
 }
 
 /* ========================================
+   SEARCH DROPDOWN STYLES
+   ======================================== */
+
+/* Search Dropdown Styles */
+.search-dropdown {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 0.375rem;
+    background-color: white;
+    z-index: 1060; /* Higher than Bootstrap navbar (1030) and modals (1055) */
+    position: relative;
+}
+
+.search-dropdown .list-group-item:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+/* ========================================
    RESPONSIVE DESIGN
    ======================================== */
 @media (max-width: 768px) {
