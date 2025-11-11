@@ -128,6 +128,39 @@ footer {
    HOME PAGE SPECIFIC STYLES
    ======================================== */
 
+/* Search Bar Inline Styles */
+.search-bar-padding {
+    background-color: #233962;
+    padding: 4px 0;
+}
+
+.search-input {
+    border-radius: 15px 0 0 15px;
+    background-color: white;
+    height: 30px;
+    font-size: 0.875rem;
+}
+
+.search-button {
+    border-radius: 0 15px 15px 0;
+    height: 30px;
+    padding: 0 10px;
+}
+
+.search-icon {
+    font-size: 0.8rem;
+    color: #ed7d2b;
+}
+
+/* Navbar Brand */
+.navbar-brand-color {
+    color: #233962 !important;
+}
+
+.navbar-icon-color {
+    color: #ed7d2b;
+}
+
 /* Hero Section */
 .hero-section {
     background-image: url('images/People waiting for bus at bus stop.jpg');
@@ -176,6 +209,16 @@ footer {
     overflow: hidden;
 }
 
+.service-card-blue {
+    background-color: #233962;
+    height: 450px;
+}
+
+.service-card-orange {
+    background-color: #ed7d2b;
+    height: 450px;
+}
+
 .shadow-hover {
     box-shadow: var(--shadow-light);
 }
@@ -195,6 +238,10 @@ footer {
 
 .service-icon a:hover .icon-circle {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.service-icon-size {
+    font-size: 8rem;
 }
 
 /* Buttons */
@@ -263,6 +310,292 @@ footer {
 .search-dropdown .list-group-item:hover {
     background-color: #f8f9fa;
     cursor: pointer;
+}
+
+/* ========================================
+   FARES & PASSES PAGE SPECIFIC STYLES
+   ======================================== */
+
+/* Page Header */
+.fares-page-header {
+    background-color: #233962;
+    padding: 4rem 0 3rem;
+}
+
+.fares-header-btn {
+    background-color: #ed7d2b;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: 500;
+}
+
+.fares-header-btn:hover {
+    background-color: #d66d1f;
+    color: white;
+}
+
+/* Fare Information Section */
+.fares-info-section {
+    background-color: #f8f9fa;
+}
+
+/* Pricing Table */
+.fares-table-card {
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.fares-table-header {
+    background: linear-gradient(135deg, #233962 0%, #38568c 100%);
+}
+
+.fares-table-icon {
+    color: #ed7d2b;
+}
+
+.fares-table thead {
+    background-color: #f8f9fa;
+}
+
+.fares-table th {
+    color: #233962;
+    font-weight: 600;
+}
+
+.fares-table tbody tr {
+    border-bottom: 2px solid #f8f9fa;
+}
+
+.fares-table td {
+    font-size: 1.1rem;
+}
+
+.fares-table .fare-type {
+    color: #233962;
+}
+
+.fares-table .fare-icon {
+    color: #ed7d2b;
+}
+
+.fares-table .fare-price-adult {
+    color: #ed7d2b;
+    font-size: 1.2rem;
+}
+
+.fares-table .fare-price-reduced {
+    color: #38568c;
+    font-size: 1.2rem;
+}
+
+/* Info Cards */
+.fares-info-card {
+    border-radius: 1rem;
+}
+
+.fares-info-card.card-orange {
+    border-left: 4px solid #ed7d2b !important;
+}
+
+.fares-info-card.card-blue {
+    border-left: 4px solid #38568c !important;
+}
+
+.fares-info-card .card-icon-bg-orange {
+    background-color: rgba(237, 125, 43, 0.1);
+}
+
+.fares-info-card .card-icon-bg-blue {
+    background-color: rgba(56, 86, 140, 0.1);
+}
+
+.fares-info-card .card-icon-orange {
+    color: #ed7d2b;
+}
+
+.fares-info-card .card-icon-blue {
+    color: #38568c;
+}
+
+.fares-info-card h4 {
+    color: #233962;
+}
+
+.fares-info-card p {
+    color: #6c757d;
+    line-height: 1.7;
+}
+
+/* Where to Buy Section */
+.where-to-buy-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 1rem;
+}
+
+.where-to-buy-title {
+    color: #233962;
+}
+
+.where-to-buy-icon {
+    color: #ed7d2b;
+}
+
+.where-to-buy-option {
+    background-color: white;
+    border: 2px solid #f8f9fa;
+}
+
+.where-to-buy-option .option-icon-orange {
+    color: #ed7d2b;
+}
+
+.where-to-buy-option .option-icon-blue {
+    color: #38568c;
+}
+
+.where-to-buy-option h5 {
+    color: #233962;
+}
+
+/* Policy Notice */
+.policy-notice {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107 !important;
+    border-radius: 1rem;
+}
+
+.policy-notice-icon {
+    color: #856404;
+}
+
+.policy-notice-text {
+    color: #856404;
+}
+
+/* ========================================
+   CONTACT PAGE SPECIFIC STYLES
+   ======================================== */
+
+/* Contact Cards */
+.contact-card {
+    border-radius: 1rem;
+}
+
+.contact-icon-bg-orange {
+    background-color: rgba(237, 125, 43, 0.1);
+}
+
+.contact-icon-bg-blue {
+    background-color: rgba(56, 86, 140, 0.1);
+}
+
+.contact-icon-orange {
+    color: #ed7d2b;
+}
+
+.contact-icon-blue {
+    color: #38568c;
+}
+
+.contact-card h3 {
+    color: #233962;
+}
+
+.contact-card p,
+.contact-card strong {
+    color: #6c757d;
+}
+
+.contact-card strong {
+    color: #233962;
+}
+
+.contact-card a {
+    color: #233962;
+    font-size: 1.1rem;
+}
+
+/* ========================================
+   ROUTES & STOPS PAGE SPECIFIC STYLES
+   ======================================== */
+
+/* Route List */
+.routes-section-bg {
+    background-color: #f8f9fa;
+}
+
+.routes-card {
+    border-radius: 1rem;
+}
+
+.routes-title {
+    color: #233962;
+}
+
+.routes-icon {
+    color: #ed7d2b;
+}
+
+.route-badge-blue {
+    width: 40px;
+    height: 40px;
+    background-color: #233962;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.route-badge-orange {
+    width: 40px;
+    height: 40px;
+    background-color: #ed7d2b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.route-name {
+    color: #233962;
+}
+
+/* Map */
+.map-card {
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.map-container {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    background-color: #e9ecef;
+}
+
+.map-iframe {
+    border: 0;
+}
+
+.map-legend-card {
+    border-radius: 1rem;
+}
+
+.legend-icon-orange {
+    color: #ed7d2b;
+}
+
+.legend-icon-blue {
+    color: #233962;
+}
+
+.legend-text {
+    color: #233962;
+}
+
+.legend-line {
+    width: 20px;
+    height: 3px;
+    background-color: #ed7d2b;
 }
 
 /* ========================================

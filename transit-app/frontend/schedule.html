@@ -12,14 +12,14 @@
 <body>
     <div class="content-wrapper">
     <!-- Full Width Search Bar -->
-    <div class="search-bar-section">
+    <div class="search-bar-section search-bar-padding">
         <div class="container">
             <div class="row align-items-center justify-content-end">
                 <div class="col-md-3">
                     <div class="input-group input-group-sm">
-                        <input type="text" class="form-control border-0" style="border-radius: 15px 0 0 15px; background-color: white; height: 30px; font-size: 0.875rem;">
-                        <button class="btn btn-light border-0" type="button" style="border-radius: 0 15px 15px 0; height: 30px; padding: 0 10px;">
-                            <i class="fas fa-search" style="font-size: 0.8rem; color: #ed7d2b;"></i>
+                        <input type="text" class="form-control border-0 search-input">
+                        <button class="btn btn-light border-0 search-button" type="button">
+                            <i class="fas fa-search search-icon"></i>
                         </button>
                     </div>
                 </div>
@@ -30,8 +30,8 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html">
-                <i class="fas fa-bus me-2" style="color: #ed7d2b;"></i>
+            <a class="navbar-brand fw-bold navbar-brand-color" href="index.html">
+                <i class="fas fa-bus me-2 navbar-icon-color"></i>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -42,16 +42,16 @@
                         <a class="nav-link" href="index.html">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="schedule.html">Schedule</a>
+                        <a class="nav-link" href="schedule.html">Schedule</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#fares">Fares & Passes</a>
+                        <a class="nav-link" href="fares-passes.html">Fares & Passes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#routes">Routes & Stops</a>
+                        <a class="nav-link" href="routes-stops.html">Routes & Stops</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#contact">Contact</a>
+                        <a class="nav-link" href="contact.html">Contact</a>
                     </li>
                 </ul>
             </div>
@@ -59,7 +59,7 @@
     </nav>
 
     <!-- Page Header -->
-    <section class="py-5" style="background: linear-gradient(135deg, #233962 0%, #38568c 100%);">
+    <section class="py-5" style="background-color: #233962;">
         <div class="container">
             <div class="row">
                 <div class="col-12 text-start text-white">
@@ -136,15 +136,31 @@
     </div>
 
     <!-- Footer -->
-    <footer class="text-white py-4" style="background-color: #233962;">
+    <footer class="bg-dark text-white py-4">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <h5 class="mb-3">Regional Bus Transit</h5>
-                    <p>Your reliable public transportation partner</p>
+                    <h5>Regional Bus Transit</h5>
+                    <p class="mb-0"><small>Est. 2025</small></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="schedule.html" class="text-white-50">Schedule Information</a></li>
+                        <li><a href="fares-passes.html" class="text-white-50">Fares & Passes</a></li>
+                        <li><a href="routes-stops.html" class="text-white-50">Routes & Stops</a></li>
+                        <li><a href="contact.html" class="text-white-50">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-3">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2025 Regional Bus Transit | COMP-3303 Project</p>
+                    <small class="text-muted">Team: Amanda Kelly, Sadman Islam Aaraf, Eshaan Prakash</small>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <p class="mb-0">&copy; 2025 Regional Bus Transit. All rights reserved.</p>
+                    <small class="text-muted">Inspired by Kings Transit Authority</small>
                 </div>
             </div>
         </div>
