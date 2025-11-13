@@ -434,7 +434,6 @@ function initRoutesMap() {
     initRoutesMapView();
     window.routeLayers = {};
 
-
     // Set up route list interactions
     const routeLinks = document.querySelectorAll('.route-link');
     routeLinks.forEach(link => {
@@ -444,6 +443,24 @@ function initRoutesMap() {
             highlightRouteOnMap(routeName);
         });
     });
+
+    // Set up map controls
+    const refreshBtn = document.getElementById('refreshRoutesBtn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function() {
+            // Refresh map data (simulate)
+            updateRoutesLastUpdate();
+        });
+    }
+
+    const centerBtn = document.getElementById('centerRoutesBtn');
+    if (centerBtn) {
+        centerBtn.addEventListener('click', function() {
+            if (window.routesMap) {
+                window.routesMap.setView([44.6488, -63.5752], 11);
+            }
+        });
+    }
 }
 
 // Initialize Routes Map
@@ -871,5 +888,14 @@ function updateLastUpdate() {
     if (lastUpdateElement) {
         const now = new Date();
         lastUpdateElement.textContent = now.toLocaleTimeString();
+    }
+}
+
+// Update routes last update timestamp
+function updateRoutesLastUpdate() {
+    const routesLastUpdateElement = document.getElementById('routesLastUpdate');
+    if (routesLastUpdateElement) {
+        const now = new Date();
+        routesLastUpdateElement.textContent = now.toLocaleTimeString();
     }
 }
