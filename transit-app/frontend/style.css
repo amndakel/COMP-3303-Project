@@ -337,7 +337,7 @@ footer {
 .route-card {
     background-color: var(--primary-orange);
     border: none;
-    min-height: 200px;
+    min-height: 400px;
 }
 
 /* Route Icon Colors */
@@ -604,6 +604,51 @@ footer {
 
 .routes-icon {
     color: #ed7d2b;
+}
+
+.route-badge-navy {
+    width: 40px;
+    height: 40px;
+    background-color: #233962;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.route-badge-red {
+    width: 40px;
+    height: 40px;
+    background-color: #dc3545;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.route-badge-green {
+    width: 40px;
+    height: 40px;
+    background-color: #1a7f64;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.route-badge-pink {
+    width: 40px;
+    height: 40px;
+    background-color: #d63384;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.route-badge-yellow {
+    width: 40px;
+    height: 40px;
+    background-color: #ffc107;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .route-badge-blue {

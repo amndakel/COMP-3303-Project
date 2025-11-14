@@ -487,11 +487,11 @@ function initRoutesMapView() {
 // Add route paths to map
 function addRoutePaths(map) {
     const routeColors = {
-        'Route 1': '#007bff', // Blue
-        'Route 2': '#fd7e14', // Orange
-        'Route 3': '#007bff', // Blue
-        'Route 4': '#fd7e14', // Orange
-        'Route 5': '#007bff'  // Blue
+        'Route 1': '#233962', // Navy
+        'Route 2': '#dc3545', // Red
+        'Route 3': '#1a7f64', // Green
+        'Route 4': '#d63384', // Pink
+        'Route 5': '#ffc107'  // Yellow
     };
 
     const routePaths = {
