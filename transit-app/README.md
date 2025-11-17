@@ -11,6 +11,6 @@ This project will design and implement a full-stack web application that simulat
 A user should be able to browse available bus routes, stops, and schedules, search or filter by route or stop, and view route details. Admin users (or staff) will be able to create, update, or delete routes and schedules.
 
 ## Technologies Used
-- **Frontend**: HTML, CSS, JavaScript (with jQuery/AJAX), Bootstrap
-- **Backend**: PHP or Python
+- **Frontend**: HTML, CSS, JavaScript, Bootstrap
+- **Backend**: PHP 
 - **Database**: MySQL
