@@ -5,11 +5,11 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Database configuration (Update with your cloud database credentials)
-$host = 'your-cloud-db-host'; // e.g., 'your-db-instance.region.rds.amazonaws.com'
+// Database configuration (AMPPS default settings)
+$host = 'localhost';
 $dbname = 'transit_app';
-$username = 'your-username';
-$password = 'your-password';
+$username = 'root';
+$password = 'mysql'; // Default AMPPS MySQL password
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);

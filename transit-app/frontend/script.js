@@ -144,37 +144,31 @@ function initRouteSelection() {
     });
 }
 
-// Show Route Schedule (Static Data for Demo)
-function showRouteSchedule(routeId) {
-    const schedules = {
-        route1: {
-            name: 'Route 1: Downtown - Valley',
-            times: ['6:00 AM', '7:30 AM', '9:00 AM', '10:30 AM', '12:00 PM', '1:30 PM', '3:00 PM', '4:30 PM', '6:00 PM', '7:30 PM'],
-            stops: ['Downtown Terminal', 'Main Street', 'Central Park', 'Valley Station']
-        },
-        route2: {
-            name: 'Route 2: Valley - Campus',
-            times: ['6:15 AM', '7:45 AM', '9:15 AM', '10:45 AM', '12:15 PM', '1:45 PM', '3:15 PM', '4:45 PM', '6:15 PM', '7:45 PM'],
-            stops: ['Valley Station', 'University Ave', 'Campus Entrance', 'Library Stop']
-        },
-        route3: {
-            name: 'Route 3: Campus - Harbor',
-            times: ['6:30 AM', '8:00 AM', '9:30 AM', '11:00 AM', '12:30 PM', '2:00 PM', '3:30 PM', '5:00 PM', '6:30 PM', '8:00 PM'],
-            stops: ['Campus Entrance', 'Harbor View', 'Marina District', 'Harbor Terminal']
-        },
-        route4: {
-            name: 'Route 4: Harbor - Suburban',
-            times: ['6:45 AM', '8:15 AM', '9:45 AM', '11:15 AM', '12:45 PM', '2:15 PM', '3:45 PM', '5:15 PM', '6:45 PM', '8:15 PM'],
-            stops: ['Harbor Terminal', 'Suburban Mall', 'Residential Area', 'Suburban Station']
-        },
-        route5: {
-            name: 'Route 5: Suburban - Downtown',
-            times: ['7:00 AM', '8:30 AM', '10:00 AM', '11:30 AM', '1:00 PM', '2:30 PM', '4:00 PM', '5:30 PM', '7:00 PM', '8:30 PM'],
-            stops: ['Suburban Station', 'City Center', 'Business District', 'Downtown Terminal']
-        }
-    };
+// Show Route Schedule (Fetch from Backend API)
+async function showRouteSchedule(routeId) {
+    // Extract route number from routeId (e.g., 'route1' -> '1')
+    const routeNumber = routeId.replace('route', '');
 
-    const schedule = schedules[routeId];
+    try {
+        // Fetch schedule from backend
+        const response = await fetch(`../backend/index.php/schedule?route_id=${routeNumber}`);
+        const schedule = await response.json();
+
+        if (schedule.error) {
+            console.error('Backend error:', schedule.error);
+            alert('Error loading schedule: ' + schedule.error);
+            return;
+        }
+
+        displayScheduleModal(schedule);
+    } catch (error) {
+        console.error('Error fetching schedule:', error);
+        alert('Could not connect to backend. Make sure AMPPS is running and database is set up.');
+    }
+}
+
+// Display schedule in modal
+function displayScheduleModal(schedule) {
     if (schedule) {
         let content = `<h4>${schedule.name}</h4><h5>Departure Times:</h5><ul>`;
         schedule.times.forEach(time => {
