@@ -255,37 +255,27 @@ function initNavigation() {
     });
 }
 
-// Search Address Functionality (for index.html)
-function searchAddress(query) {
-    // Static address to route mapping
-    const addressRoutes = {
-        'downtown terminal': 'route1',
-        'main street': 'route1',
-        'central park': 'route1',
-        'valley station': 'route1',
-        'valley': 'route1',
-        'university ave': 'route2',
-        'campus entrance': 'route2',
-        'library stop': 'route2',
-        'campus': 'route2',
-        'harbor view': 'route3',
-        'marina district': 'route3',
-        'harbor terminal': 'route3',
-        'harbor': 'route3',
-        'suburban mall': 'route4',
-        'residential area': 'route4',
-        'suburban station': 'route4',
-        'suburban': 'route4',
-        'city center': 'route5',
-        'business district': 'route5',
-        'downtown': 'route5'
-    };
+// Search Address Functionality (for index.html) - Fetch from API
+async function searchAddress(query) {
+    try {
+        const response = await fetch(`../backend/index.php/search?q=${encodeURIComponent(query)}`);
+        const results = await response.json();
 
-    const routeId = addressRoutes[query];
-    if (routeId) {
-        showRouteSchedule(routeId);
-    } else {
-        alert(`No route found for address: ${query}. Try searching for stops like "Downtown Terminal" or "Campus Entrance".`);
+        if (results.error) {
+            alert(results.error);
+            return;
+        }
+
+        if (results.length > 0) {
+            // Use the first result's route_id
+            const routeId = results[0].route_id;
+            showRouteSchedule(routeId);
+        } else {
+            alert(`No route found for address: ${query}. Try searching for stops like "Downtown Terminal" or "Campus Entrance".`);
+        }
+    } catch (error) {
+        console.error('Error searching address:', error);
+        alert('Error searching. Please try again.');
     }
 }
 
