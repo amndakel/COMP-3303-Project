@@ -46,10 +46,10 @@ CREATE TABLE service_updates (
 -- Insert sample data
 INSERT INTO routes (name, description, color) VALUES
 ('Route 1: Downtown - Valley', 'Connects downtown area with valley stations', '#233962'),
-('Route 2: Valley - Campus', 'Serves valley and university campus', '#38568c'),
-('Route 3: Campus - Harbor', 'Links campus with harbor district', '#ed7d2b'),
-('Route 4: Harbor - Suburban', 'Connects harbor to suburban areas', '#e2893f'),
-('Route 5: Suburban - Downtown', 'Direct route from suburbs to downtown', '#6c757d');
+('Route 2: Valley - Campus', 'Serves valley and university campus', '#dc3545'),
+('Route 3: Campus - Harbor', 'Links campus with harbor district', '#1a7f64'),
+('Route 4: Harbor - Suburban', 'Connects harbor to suburban areas', '#d63384'),
+('Route 5: Suburban - Downtown', 'Direct route from suburbs to downtown', '#ffc107');
 
 INSERT INTO schedules (route_id, times, stops) VALUES
 (1, '["6:00 AM", "7:30 AM", "9:00 AM", "10:30 AM", "12:00 PM", "1:30 PM", "3:00 PM", "4:30 PM", "6:00 PM", "7:30 PM"]', '["Downtown Terminal", "Main Street", "Central Park", "Valley Station"]'),
