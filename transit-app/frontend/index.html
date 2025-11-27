@@ -16,9 +16,10 @@
             <div class="row align-items-center justify-content-end">
                 <div class="col-md-3">
                     <div class="input-group input-group-sm">
-                        <input type="text" class="form-control border-0 search-input">
-                        <button class="btn btn-light border-0 search-button" type="button">
-                            <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="form-control border-0 search-input" title="Search" placeholder="Search..." aria-label="Search">
+                        <button class="btn btn-light border-0 search-button" type="button" aria-label="Search" title="Search">
+                            <i class="fas fa-search search-icon" aria-hidden="true"></i>
+                            <span class="visually-hidden">Search</span>
                         </button>
                     </div>
                 </div>
@@ -29,10 +30,11 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold navbar-brand-color" href="index.html">
-                <i class="fas fa-bus me-2 navbar-icon-color"></i>
+            <a class="navbar-brand fw-bold navbar-brand-color" href="index.html" title="Regional Bus Transit" aria-label="Regional Bus Transit">
+                <i class="fas fa-bus me-2 navbar-icon-color" aria-hidden="true"></i>
+                <span class="visually-hidden">Regional Bus Transit</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" title="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -92,8 +94,9 @@
                         <div class="d-flex flex-column justify-content-center align-items-center h-100">
                             <h4 class="mb-4 text-white">Schedule</h4>
                             <div class="service-icon flex-grow-1 d-flex align-items-center">
-                                <a href="schedule.html" class="text-decoration-none">
-                                    <i class="fas fa-calendar-alt text-light service-icon-size"></i>
+                                <a href="schedule.html" class="text-decoration-none" title="View schedule" aria-label="View schedule">
+                                    <i class="fas fa-calendar-alt text-light service-icon-size" aria-hidden="true"></i>
+                                    <span class="visually-hidden">Schedule</span>
                                 </a>
                             </div>
                         </div>
@@ -104,8 +107,9 @@
                         <div class="d-flex flex-column justify-content-center align-items-center h-100">
                             <h4 class="mb-4 text-white">Fares & Passes</h4>
                             <div class="service-icon flex-grow-1 d-flex align-items-center">
-                                <a href="fares-passes.html" class="text-decoration-none">
-                                    <i class="fa-solid fa-ticket text-light service-icon-size"></i>
+                                <a href="fares-passes.html" class="text-decoration-none" title="View fares and passes" aria-label="View fares and passes">
+                                    <i class="fa-solid fa-ticket text-light service-icon-size" aria-hidden="true"></i>
+                                    <span class="visually-hidden">Fares &amp; Passes</span>
                                 </a>
                             </div>
                         </div>
@@ -116,8 +120,9 @@
                         <div class="d-flex flex-column justify-content-center align-items-center h-100">
                             <h4 class="mb-4 text-white">Routes & Stops</h4>
                             <div class="service-icon flex-grow-1 d-flex align-items-center">
-                                <a href="routes-stops.html" class="text-decoration-none">
-                                    <i class="fas fa-map-marked-alt text-light service-icon-size"></i>
+                                <a href="routes-stops.html" class="text-decoration-none" title="View routes and stops" aria-label="View routes and stops">
+                                    <i class="fas fa-map-marked-alt text-light service-icon-size" aria-hidden="true"></i>
+                                    <span class="visually-hidden">Routes &amp; Stops</span>
                                 </a>
                             </div>
                         </div>
@@ -128,8 +133,9 @@
                         <div class="d-flex flex-column justify-content-center align-items-center h-100">
                             <h4 class="mb-4 text-white">Bus Tracking</h4>
                             <div class="service-icon flex-grow-1 d-flex align-items-center">
-                                <a href="bus-tracking.html" class="text-decoration-none">
-                                    <i class="fas fa-location-dot text-light service-icon-size"></i>
+                                <a href="bus-tracking.html" class="text-decoration-none" title="Track buses" aria-label="Track buses">
+                                    <i class="fas fa-location-dot text-light service-icon-size" aria-hidden="true"></i>
+                                    <span class="visually-hidden">Bus Tracking</span>
                                 </a>
                             </div>
                         </div>
