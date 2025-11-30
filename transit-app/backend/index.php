@@ -63,7 +63,10 @@ function handleSchedule($method, $pdo) {
             return;
         }
 
-        $stmt = $pdo->prepare("SELECT * FROM schedules WHERE route_id = ?");
+        $stmt = $pdo->prepare("SELECT s.*, r.name, r.description, r.color 
+                               FROM schedules s 
+                               JOIN routes r ON s.route_id = r.id 
+                               WHERE s.route_id = ?");
         $stmt->execute([$routeId]);
         $schedule = $stmt->fetch(PDO::FETCH_ASSOC);
 
