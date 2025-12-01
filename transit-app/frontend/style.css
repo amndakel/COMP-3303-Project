@@ -12,6 +12,42 @@
     --shadow-light: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
     --shadow-medium: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     --shadow-large: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+    
+    /* Light mode (default) */
+    --bg-color: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --text-color: #2c3e50;
+    --text-muted: #7f8c8d;
+    --border-color: #e9ecef;
+    --card-bg: #ffffff;
+    --navbar-bg: rgba(255, 255, 255, 0.95);
+    --navbar-border: rgba(35, 57, 98, 0.1);
+    --input-bg: #ffffff;
+    --input-border: #ced4da;
+    --dropdown-bg: #ffffff;
+    --table-bg: #f8f9fa;
+    --modal-bg: #ffffff;
+}
+
+/* Dark mode variables */
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --text-color: #e0e0e0;
+    --text-muted: #a0a0a0;
+    --border-color: #404040;
+    --card-bg: #2d2d2d;
+    --navbar-bg: rgba(26, 26, 26, 0.95);
+    --navbar-border: rgba(255, 255, 255, 0.1);
+    --input-bg: #2d2d2d;
+    --input-border: #404040;
+    --dropdown-bg: #2d2d2d;
+    --table-bg: #1a1a1a;
+    --modal-bg: #2d2d2d;
+    --light-bg: #2d2d2d;
+    --shadow-light: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
+    --shadow-medium: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+    --shadow-large: 0 1rem 3rem rgba(0, 0, 0, 0.5);
 }
 
 /* Global Styles */
@@ -28,10 +64,11 @@ html, body {
 body {
     font-family: 'Roboto', 'Arial', sans-serif;
     line-height: 1.6;
-    color: var(--dark-text);
-    background-color: #ffffff;
+    color: var(--text-color);
+    background-color: var(--bg-color);
     display: flex;
     flex-direction: column;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .content-wrapper {
@@ -68,9 +105,10 @@ footer {
 /* Navigation */
 .navbar {
     backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.95) !important;
+    background: var(--navbar-bg) !important;
     box-shadow: var(--shadow-light);
-    border-bottom: 1px solid rgba(35, 57, 98, 0.1);
+    border-bottom: 1px solid var(--navbar-border);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .navbar-brand {
@@ -117,12 +155,14 @@ footer {
 
 /* Bus Tracking Styles */
 .tracking-section {
-    background-color: #f8f9fa;
+    background-color: var(--bg-secondary);
+    transition: background-color 0.3s ease;
 }
 
 .tracking-card {
-    background-color: #ffffff;
-    border: 1px solid #e9ecef;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .tracking-title {
@@ -133,9 +173,20 @@ footer {
     color: #233962;
 }
 
+[data-theme="dark"] .tracking-title {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .tracking-icon {
+    color: var(--primary-orange);
+}
+
 .tracking-select {
-    border: 1px solid #ced4da;
+    border: 1px solid var(--input-border);
     border-radius: 0.375rem;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 .bus-list {
@@ -144,24 +195,28 @@ footer {
 }
 
 .bus-item {
-    background-color: #f8f9fa;
-    border: 1px solid #e9ecef;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .tracking-map {
     height: 500px;
     width: 100%;
     border-radius: 0.375rem;
-    border: 1px solid #dee2e6;
+    border: 1px solid var(--border-color);
+    transition: border-color 0.3s ease;
 }
 
 .map-card {
-    border: 1px solid #e9ecef;
+    border: 1px solid var(--border-color);
+    transition: border-color 0.3s ease;
 }
 
 .map-controls-card {
-    background-color: #ffffff;
-    border: 1px solid #e9ecef;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .bus-marker {
@@ -205,9 +260,11 @@ footer {
 
 .search-input {
     border-radius: 15px 0 0 15px;
-    background-color: white;
+    background-color: var(--input-bg);
     height: 30px;
     font-size: 0.875rem;
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .search-button {
@@ -227,6 +284,14 @@ footer {
 }
 
 .navbar-icon-color {
+    color: #ed7d2b;
+}
+
+[data-theme="dark"] .navbar-brand-color {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .navbar-icon-color {
     color: #ed7d2b;
 }
 
@@ -269,7 +334,8 @@ footer {
 
 /* Services Section */
 .services-section {
-    background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+    background: linear-gradient(to bottom, var(--bg-color) 0%, var(--bg-secondary) 100%);
+    transition: background 0.3s ease;
 }
 
 .service-card {
@@ -327,6 +393,61 @@ footer {
 /* Updates Section */
 .update-item {
     border-left: 4px solid transparent;
+    background-color: var(--card-bg) !important;
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode overrides for Bootstrap background classes */
+[data-theme="dark"] .bg-light {
+    background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] .bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] section.bg-light {
+    background-color: var(--bg-secondary) !important;
+}
+
+/* Specific override for service updates section */
+[data-theme="dark"] #updates.bg-light {
+    background-color: var(--bg-secondary) !important;
+}
+
+[data-theme="dark"] #updates .bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] #updates .update-item {
+    background-color: var(--card-bg) !important;
+}
+
+/* Ensure text-warning has good contrast in dark mode */
+[data-theme="dark"] .text-warning {
+    color: #ffc107 !important;
+}
+
+/* Ensure all Bootstrap text utility classes work in dark mode */
+[data-theme="dark"] .text-primary {
+    color: var(--primary-blue) !important;
+}
+
+[data-theme="dark"] .text-secondary {
+    color: var(--text-muted) !important;
+}
+
+[data-theme="dark"] .text-success {
+    color: #28a745 !important;
+}
+
+[data-theme="dark"] .text-danger {
+    color: #dc3545 !important;
+}
+
+[data-theme="dark"] .text-info {
+    color: #17a2b8 !important;
 }
 
 /* ========================================
@@ -335,9 +456,14 @@ footer {
 
 /* Route Cards */
 .route-card {
-    background-color: var(--primary-orange);
+    background-color: var(--primary-orange) !important;
     border: none;
     min-height: 400px;
+}
+
+/* Route card text - always white on orange background */
+.route-card-text {
+    color: #ffffff !important;
 }
 
 /* Route Icon Colors */
@@ -369,15 +495,23 @@ footer {
 .search-dropdown {
     max-height: 200px;
     overflow-y: auto;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     border-radius: 0.375rem;
-    background-color: white;
+    background-color: var(--dropdown-bg);
     z-index: 1060; /* Higher than Bootstrap navbar (1030) and modals (1055) */
     position: relative;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.search-dropdown .list-group-item {
+    background-color: var(--dropdown-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .search-dropdown .list-group-item:hover {
-    background-color: #f8f9fa;
+    background-color: var(--bg-secondary);
     cursor: pointer;
 }
 
@@ -406,7 +540,8 @@ footer {
 
 /* Fare Information Section */
 .fares-info-section {
-    background-color: #f8f9fa;
+    background-color: var(--bg-secondary);
+    transition: background-color 0.3s ease;
 }
 
 /* Pricing Table */
@@ -424,7 +559,8 @@ footer {
 }
 
 .fares-table thead {
-    background-color: #f8f9fa;
+    background-color: var(--table-bg);
+    transition: background-color 0.3s ease;
 }
 
 .fares-table th {
@@ -432,8 +568,15 @@ footer {
     font-weight: 600;
 }
 
+[data-theme="dark"] .fares-table th {
+    color: var(--text-color);
+}
+
 .fares-table tbody tr {
-    border-bottom: 2px solid #f8f9fa;
+    border-bottom: 2px solid var(--bg-secondary);
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .fares-table td {
@@ -442,6 +585,10 @@ footer {
 
 .fares-table .fare-type {
     color: #233962;
+}
+
+[data-theme="dark"] .fares-table .fare-type {
+    color: var(--text-color);
 }
 
 .fares-table .fare-icon {
@@ -496,14 +643,27 @@ footer {
     line-height: 1.7;
 }
 
+[data-theme="dark"] .fares-info-card h4 {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .fares-info-card p {
+    color: var(--text-color);
+}
+
 /* Where to Buy Section */
 .where-to-buy-card {
-    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-color) 100%);
     border-radius: 1rem;
+    transition: background 0.3s ease;
 }
 
 .where-to-buy-title {
     color: #233962;
+}
+
+[data-theme="dark"] .where-to-buy-title {
+    color: var(--text-color);
 }
 
 .where-to-buy-icon {
@@ -511,8 +671,9 @@ footer {
 }
 
 .where-to-buy-option {
-    background-color: white;
-    border: 2px solid #f8f9fa;
+    background-color: var(--card-bg);
+    border: 2px solid var(--bg-secondary);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .where-to-buy-option .option-icon-orange {
@@ -525,6 +686,10 @@ footer {
 
 .where-to-buy-option h5 {
     color: #233962;
+}
+
+[data-theme="dark"] .where-to-buy-option h5 {
+    color: var(--text-color);
 }
 
 /* Policy Notice */
@@ -540,6 +705,16 @@ footer {
 
 .policy-notice-text {
     color: #856404;
+}
+
+[data-theme="dark"] .policy-notice {
+    background-color: rgba(255, 193, 7, 0.2);
+    border-left-color: #ffc107 !important;
+}
+
+[data-theme="dark"] .policy-notice-icon,
+[data-theme="dark"] .policy-notice-text {
+    color: #ffc107;
 }
 
 /* ========================================
@@ -585,13 +760,31 @@ footer {
     font-size: 1.1rem;
 }
 
+[data-theme="dark"] .contact-card h3 {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .contact-card p,
+[data-theme="dark"] .contact-card strong {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .contact-card a {
+    color: var(--primary-orange);
+}
+
+[data-theme="dark"] .contact-card a:hover {
+    color: var(--secondary-orange);
+}
+
 /* ========================================
    ROUTES & STOPS PAGE SPECIFIC STYLES
    ======================================== */
 
 /* Route List */
 .routes-section-bg {
-    background-color: #f8f9fa;
+    background-color: var(--bg-secondary);
+    transition: background-color 0.3s ease;
 }
 
 .routes-card {
@@ -600,6 +793,10 @@ footer {
 
 .routes-title {
     color: #233962;
+}
+
+[data-theme="dark"] .routes-title {
+    color: var(--text-color);
 }
 
 .routes-icon {
@@ -673,6 +870,10 @@ footer {
     color: #233962;
 }
 
+[data-theme="dark"] .route-name {
+    color: var(--text-color);
+}
+
 /* Map */
 .map-card {
     border-radius: 1rem;
@@ -683,14 +884,16 @@ footer {
     height: 500px;
     width: 100%;
     border-radius: 0.375rem;
-    border: 1px solid #dee2e6;
+    border: 1px solid var(--border-color);
+    transition: border-color 0.3s ease;
 }
 
 .map-container {
     position: relative;
     width: 100%;
     height: 500px;
-    background-color: #e9ecef;
+    background-color: var(--bg-secondary);
+    transition: background-color 0.3s ease;
 }
 
 .map-iframe {
@@ -713,10 +916,309 @@ footer {
     color: #233962;
 }
 
+[data-theme="dark"] .legend-text {
+    color: var(--text-color);
+}
+
 .legend-line {
     width: 20px;
     height: 3px;
     background-color: #ed7d2b;
+}
+
+/* ========================================
+   DARK MODE TOGGLE BUTTON
+   ======================================== */
+.dark-mode-toggle {
+    background: transparent;
+    border: 2px solid var(--primary-blue);
+    color: var(--primary-blue);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+
+.dark-mode-toggle:hover {
+    background-color: var(--primary-blue);
+    color: white;
+    transform: scale(1.1);
+}
+
+[data-theme="dark"] .dark-mode-toggle {
+    border-color: var(--primary-orange);
+    color: var(--primary-orange);
+}
+
+[data-theme="dark"] .dark-mode-toggle:hover {
+    background-color: var(--primary-orange);
+    color: white;
+}
+
+/* Dark mode styles for cards */
+.card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode styles for modals */
+.modal-content {
+    background-color: var(--modal-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.modal-header {
+    border-bottom-color: var(--border-color);
+}
+
+.modal-footer {
+    border-top-color: var(--border-color);
+}
+
+/* Dark mode styles for form inputs */
+.form-control {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.form-control:focus {
+    background-color: var(--input-bg);
+    border-color: var(--primary-blue);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .form-control:focus {
+    border-color: var(--primary-orange);
+}
+
+/* Dark mode styles for tables */
+.table {
+    color: var(--text-color);
+}
+
+.table td, .table th {
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* Dark mode styles for badges */
+.badge {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode styles for list groups */
+.list-group-item {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode styles for buttons */
+.btn-light {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="dark"] .btn-light:hover {
+    background-color: var(--bg-secondary);
+}
+
+/* Dark mode styles for text colors */
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+/* Dark mode text contrast fixes */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] p {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .lead {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .display-4,
+[data-theme="dark"] .display-5,
+[data-theme="dark"] .display-6 {
+    color: var(--text-color);
+}
+
+/* Dark mode for headings in service updates */
+[data-theme="dark"] .update-item h5 {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .update-item p {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .update-item small {
+    color: var(--text-muted);
+}
+
+/* Dark mode for section headings */
+[data-theme="dark"] section h2 {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .services-section h2 {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .services-section .lead {
+    color: var(--text-muted);
+}
+
+/* Dark mode for links */
+[data-theme="dark"] a {
+    color: var(--primary-orange);
+}
+
+[data-theme="dark"] a:hover {
+    color: var(--secondary-orange);
+}
+
+[data-theme="dark"] .nav-link {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .nav-link:hover {
+    color: var(--primary-orange) !important;
+}
+
+[data-theme="dark"] .nav-link.active {
+    color: var(--primary-orange) !important;
+}
+
+/* Dark mode for footer links */
+[data-theme="dark"] footer a {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+[data-theme="dark"] footer a:hover {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Dark mode for small text */
+[data-theme="dark"] small {
+    color: var(--text-muted);
+}
+
+/* Dark mode for list items */
+[data-theme="dark"] li {
+    color: var(--text-color);
+}
+
+/* Dark mode styles for route cards */
+.route-card {
+    transition: background-color 0.3s ease;
+}
+
+/* Dark mode styles for service cards */
+.service-card {
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Dark mode styles for contact cards */
+.contact-card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Dark mode styles for fares info cards */
+.fares-info-card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.fares-table-card {
+    background-color: var(--card-bg);
+    transition: background-color 0.3s ease;
+}
+
+/* Dark mode styles for routes card */
+.routes-card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.map-legend-card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Dark mode styles for navbar toggler */
+.navbar-toggler {
+    border-color: var(--border-color);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+[data-theme="dark"] .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28224, 224, 224, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Dark mode navbar - keep original styling but adjust colors */
+[data-theme="dark"] .navbar {
+    background: var(--navbar-bg) !important;
+}
+
+[data-theme="dark"] .navbar.bg-white {
+    background: var(--navbar-bg) !important;
+}
+
+/* Dark mode search input */
+.search-input {
+    background-color: var(--input-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--input-border) !important;
+}
+
+[data-theme="dark"] .search-input::placeholder {
+    color: var(--text-muted) !important;
+}
+
+/* Dark mode select elements */
+select.form-control,
+select.tracking-select {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border-color: var(--input-border);
+}
+
+select.form-control option,
+select.tracking-select option {
+    background-color: var(--input-bg);
+    color: var(--text-color);
 }
 
 /* ========================================

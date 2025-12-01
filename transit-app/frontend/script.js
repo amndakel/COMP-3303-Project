@@ -1,885 +1,461 @@
-// Main JavaScript for Regional Bus Transit Website
+// Bus Transit App - Main JavaScript
+const BACKEND_URL = 'http://localhost:8001';
 
-// Global variables for bus tracking
-let trackingMap;
-let busMarkers = [];
-let routePolylines = [];
+// Shared data
+const BUS_STOPS = [
+    { name: 'Downtown Terminal', lat: 44.6488, lng: -63.5752, routes: ['Route 1', 'Route 5'] },
+    { name: 'Main Street', lat: 44.6490, lng: -63.5760, routes: ['Route 1'] },
+    { name: 'Central Park', lat: 44.6475, lng: -63.5735, routes: ['Route 1'] },
+    { name: 'Valley Station', lat: 44.6460, lng: -63.5710, routes: ['Route 1', 'Route 2'] },
+    { name: 'University Ave', lat: 44.6360, lng: -63.5910, routes: ['Route 2'] },
+    { name: 'Campus Entrance', lat: 44.6350, lng: -63.5890, routes: ['Route 2', 'Route 3'] },
+    { name: 'Library Stop', lat: 44.6340, lng: -63.5870, routes: ['Route 2'] },
+    { name: 'Harbor View', lat: 44.6600, lng: -63.5800, routes: ['Route 3'] },
+    { name: 'Marina District', lat: 44.6650, lng: -63.5850, routes: ['Route 3'] },
+    { name: 'Harbor Terminal', lat: 44.6700, lng: -63.5900, routes: ['Route 3', 'Route 4'] },
+    { name: 'Suburban Mall', lat: 44.6800, lng: -63.6000, routes: ['Route 4'] },
+    { name: 'Residential Area', lat: 44.6850, lng: -63.6050, routes: ['Route 4'] },
+    { name: 'Suburban Station', lat: 44.6900, lng: -63.6100, routes: ['Route 4', 'Route 5'] },
+    { name: 'City Center', lat: 44.6550, lng: -63.5750, routes: ['Route 5'] },
+    { name: 'Business District', lat: 44.6500, lng: -63.5700, routes: ['Route 5'] }
+];
 
-// DOM Content Loaded Event
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all functionalities
+const ROUTE_DATA = {
+    'Route 1': { color: '#233962', desc: 'Downtown - Valley', first: '6:00 AM', last: '7:30 PM' },
+    'Route 2': { color: '#dc3545', desc: 'Valley - Campus', first: '6:15 AM', last: '7:45 PM' },
+    'Route 3': { color: '#1a7f64', desc: 'Campus - Harbor', first: '6:30 AM', last: '8:00 PM' },
+    'Route 4': { color: '#d63384', desc: 'Harbor - Suburban', first: '6:45 AM', last: '8:15 PM' },
+    'Route 5': { color: '#ffc107', desc: 'Suburban - Downtown', first: '7:00 AM', last: '8:30 PM' }
+};
+
+// Get route paths from stops
+const getRoutePath = (routeName) => BUS_STOPS
+    .filter(stop => stop.routes.includes(routeName))
+    .map(stop => [stop.lat, stop.lng]);
+
+// Map references
+let trackingMap, routesMap, busMarkers = [], routePolylines = [];
+
+// ========================================
+// INITIALIZATION
+// ========================================
+document.addEventListener('DOMContentLoaded', () => {
+    initDarkMode();
+    if (window.location.pathname.includes('admin')) return;
+    
+    const page = window.location.pathname;
+    if (page.includes('schedule')) initRouteSelection();
+    else if (page.includes('bus-tracking')) initBusTracking();
+    else if (page.includes('routes-stops')) initRoutesMap();
+    else if (page.includes('index') || page.endsWith('/')) initServiceUpdates();
+    
     initSearch();
-    initRouteSelection();
-    initServiceUpdates();
     initNavigation();
-    initGeneralEvents();
-    initBusTracking();
-    initRoutesMap();
 });
 
-// Search Functionality
+// ========================================
+// DARK MODE
+// ========================================
+function initDarkMode() {
+    const theme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    
+    const btn = document.getElementById('darkModeToggle');
+    if (btn) {
+        updateDarkModeIcon(btn, theme);
+        btn.addEventListener('click', () => {
+            const newTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateDarkModeIcon(btn, newTheme);
+        });
+    }
+}
+
+function updateDarkModeIcon(btn, theme) {
+    const icon = btn.querySelector('i');
+    if (!icon) return;
+    icon.className = `fas fa-${theme === 'dark' ? 'sun' : 'moon'}`;
+    btn.title = `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`;
+}
+
+// ========================================
+// SEARCH
+// ========================================
 function initSearch() {
-    const searchInputs = document.querySelectorAll('input[type="text"]');
-    searchInputs.forEach(input => {
-        const searchButton = input.nextElementSibling;
-        const container = input.parentElement;
-        let dropdown = container.querySelector('.search-dropdown');
-        if (!dropdown) {
-            dropdown = document.createElement('ul');
-            dropdown.className = 'search-dropdown list-group position-absolute w-100 mt-1 shadow-sm';
-            dropdown.style.zIndex = '1060'; // Higher than navbar
-            dropdown.style.display = 'none';
-            container.appendChild(dropdown);
-        }
+    document.querySelectorAll('.input-group').forEach(container => {
+        const input = container.querySelector('input.search-input');
+        const btn = container.querySelector('.search-button');
+        if (!input || !btn) return;
 
-        // Input event for suggestions
-        input.addEventListener('input', function() {
-            const query = this.value.trim().toLowerCase();
-            if (query.length > 0) {
-                showSuggestions(query, dropdown, input);
-            } else {
-                dropdown.style.display = 'none';
-            }
-        });
-
-        // Hide dropdown on focus out
-        input.addEventListener('blur', function() {
-            setTimeout(() => dropdown.style.display = 'none', 150); // Delay to allow click on dropdown
-        });
-
-        // Show dropdown on focus if has value
-        input.addEventListener('focus', function() {
-            const query = this.value.trim().toLowerCase();
-            if (query.length > 0) {
-                showSuggestions(query, dropdown, input);
-            }
-        });
-
-        searchButton.addEventListener('click', function() {
-            const query = input.value.trim().toLowerCase();
-            if (query) {
-                // Trigger search based on page
-                if (window.location.pathname.includes('schedule.html')) {
-                    filterRoutes(query);
-                } else {
-                    searchAddress(query);
-                }
-                dropdown.style.display = 'none';
-            }
-        });
-
-        // Allow Enter key to trigger search as positive confirmation
-        input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault(); // Prevent form submission if any
-                searchButton.click();
-            }
-        });
+        const dropdown = createDropdown(container);
+        
+        input.addEventListener('input', () => showSuggestions(input.value, dropdown, input));
+        input.addEventListener('focus', () => showSuggestions(input.value, dropdown, input));
+        input.addEventListener('blur', () => setTimeout(() => dropdown.style.display = 'none', 150));
+        input.addEventListener('keypress', e => e.key === 'Enter' && (e.preventDefault(), btn.click()));
+        btn.addEventListener('click', () => handleSearch(input.value, dropdown));
     });
 }
 
-// Show Suggestions in Dropdown
+function createDropdown(container) {
+    let dropdown = container.querySelector('.search-dropdown');
+    if (!dropdown) {
+        dropdown = document.createElement('ul');
+        dropdown.className = 'search-dropdown list-group position-absolute w-100 mt-1 shadow-sm';
+        dropdown.style.cssText = 'z-index:1060; display:none';
+        container.appendChild(dropdown);
+    }
+    return dropdown;
+}
+
 function showSuggestions(query, dropdown, input) {
-    dropdown.innerHTML = '';
-    let suggestions = [];
-
-    if (window.location.pathname.includes('schedule.html')) {
-        // Route suggestions
-        const routes = ['Route 1: Downtown - Valley', 'Route 2: Valley - Campus', 'Route 3: Campus - Harbor', 'Route 4: Harbor - Suburban', 'Route 5: Suburban - Downtown'];
-        suggestions = routes.filter(route => route.toLowerCase().includes(query));
-    } else {
-        // Address suggestions
-        const addresses = ['Downtown Terminal', 'Main Street', 'Central Park', 'Valley Station', 'University Ave', 'Campus Entrance', 'Library Stop', 'Harbor View', 'Marina District', 'Harbor Terminal', 'Suburban Mall', 'Residential Area', 'Suburban Station', 'City Center', 'Business District'];
-        suggestions = addresses.filter(addr => addr.toLowerCase().includes(query));
-    }
-
-    if (suggestions.length > 0) {
-        suggestions.forEach(suggestion => {
-            const li = document.createElement('li');
-            li.className = 'list-group-item list-group-item-action';
-            li.textContent = suggestion;
-            li.addEventListener('click', function() {
-                input.value = suggestion;
-                dropdown.style.display = 'none';
-                // Optionally trigger search
-                const searchButton = input.nextElementSibling;
-                if (searchButton) searchButton.click();
-            });
-            dropdown.appendChild(li);
+    query = query.trim().toLowerCase();
+    if (!query) { dropdown.style.display = 'none'; return; }
+    
+    const isSchedule = window.location.pathname.includes('schedule');
+    const source = isSchedule 
+        ? Object.keys(ROUTE_DATA).map(r => `${r}: ${ROUTE_DATA[r].desc}`)
+        : BUS_STOPS.map(s => s.name);
+    
+    const matches = source.filter(s => s.toLowerCase().includes(query));
+    
+    dropdown.innerHTML = matches.map(s => 
+        `<li class="list-group-item list-group-item-action">${s}</li>`
+    ).join('');
+    dropdown.style.display = matches.length ? 'block' : 'none';
+    
+    dropdown.querySelectorAll('li').forEach(li => {
+        li.addEventListener('click', () => {
+            input.value = li.textContent;
+            dropdown.style.display = 'none';
+            handleSearch(li.textContent, dropdown);
         });
-        dropdown.style.display = 'block';
+    });
+}
+
+function handleSearch(query, dropdown) {
+    if (!query.trim()) return;
+    dropdown.style.display = 'none';
+    
+    if (window.location.pathname.includes('schedule')) {
+        filterRoutes(query.toLowerCase());
     } else {
-        dropdown.style.display = 'none';
+        searchAddress(query);
     }
 }
 
-// Filter Routes on Schedule Page
 function filterRoutes(query) {
-    const routeCards = document.querySelectorAll('.route-card');
-    routeCards.forEach(card => {
-        const title = card.querySelector('h3').textContent.toLowerCase();
-        const description = card.querySelector('p').textContent.toLowerCase();
-        if (title.includes(query) || description.includes(query)) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
+    document.querySelectorAll('.route-card').forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(query) ? 'block' : 'none';
     });
 }
 
-// Route Selection on Schedule Page
-function initRouteSelection() {
-    if (!window.location.pathname.includes('schedule.html')) return;
-
-    const routeCards = document.querySelectorAll('.route-card');
-    routeCards.forEach(card => {
-        const link = card.closest('a');
-        if (link) {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const routeId = this.getAttribute('href').substring(1); // e.g., 'route1'
-                showRouteSchedule(routeId);
-            });
-        }
-    });
-}
-
-// Show Route Schedule (Fetch from Backend API)
-async function showRouteSchedule(routeId) {
-    // Extract route number from routeId (e.g., 'route1' -> '1')
-    const routeNumber = routeId.replace('route', '');
-
-    try {
-        // Fetch schedule from backend
-        const response = await fetch(`../backend/index.php/schedule?route_id=${routeNumber}`);
-        const schedule = await response.json();
-
-        if (schedule.error) {
-            console.error('Backend error:', schedule.error);
-            alert('Error loading schedule: ' + schedule.error);
-            return;
-        }
-
-        displayScheduleModal(schedule);
-    } catch (error) {
-        console.error('Error fetching schedule:', error);
-        alert('Could not connect to backend. Make sure AMPPS is running and database is set up.');
-    }
-}
-
-// Display schedule in modal
-function displayScheduleModal(schedule) {
-    if (schedule) {
-        let content = `<h4>${schedule.name}</h4><h5>Departure Times:</h5><ul>`;
-        schedule.times.forEach(time => {
-            content += `<li>${time}</li>`;
-        });
-        content += `</ul><h5>Stops:</h5><ul>`;
-        schedule.stops.forEach(stop => {
-            content += `<li>${stop}</li>`;
-        });
-        content += `</ul>`;
-
-        // Display in a modal or alert for simplicity
-        const modal = document.createElement('div');
-        modal.className = 'modal fade';
-        modal.innerHTML = `
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">${schedule.name}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">${content}</div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        const bsModal = new bootstrap.Modal(modal);
-        bsModal.show();
-        modal.addEventListener('hidden.bs.modal', function() {
-            document.body.removeChild(modal);
-        });
-    }
-}
-
-// Service Updates Toggle on Index Page
-function initServiceUpdates() {
-    if (!window.location.pathname.includes('index.html')) return;
-
-    const updateItems = document.querySelectorAll('.update-item');
-    updateItems.forEach(item => {
-        item.addEventListener('click', function() {
-            // Toggle visibility or expand details
-            const details = this.querySelector('p');
-            if (details.style.display === 'none' || details.style.display === '') {
-                details.style.display = 'block';
-            } else {
-                details.style.display = 'none';
-            }
-        });
-    });
-}
-
-// Navigation Enhancements
-function initNavigation() {
-    // Smooth scrolling for anchor links
-    const anchorLinks = document.querySelectorAll('a[href^="#"]');
-    anchorLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href').substring(1);
-            const targetElement = document.getElementById(targetId);
-            if (targetElement) {
-                e.preventDefault();
-                targetElement.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    });
-
-    // Highlight active navigation item
-    const currentPath = window.location.pathname.split('/').pop();
-    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
-    navLinks.forEach(link => {
-        if (link.getAttribute('href') === currentPath) {
-            link.classList.add('active');
-        }
-    });
-}
-
-// Search Address Functionality (for index.html) - Fetch from API
 async function searchAddress(query) {
     try {
-        const response = await fetch(`../backend/index.php/search?q=${encodeURIComponent(query)}`);
-        const results = await response.json();
-
-        if (results.error) {
-            alert(results.error);
-            return;
-        }
-
-        if (results.length > 0) {
-            // Use the first result's route_id
-            const routeId = results[0].route_id;
-            showRouteSchedule(routeId);
-        } else {
-            alert(`No route found for address: ${query}. Try searching for stops like "Downtown Terminal" or "Campus Entrance".`);
-        }
-    } catch (error) {
-        console.error('Error searching address:', error);
-        alert('Error searching. Please try again.');
+        const res = await fetch(`${BACKEND_URL}/index.php/search?q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        if (data.error) return alert(data.error);
+        if (data.length) showRouteSchedule(`route${data[0].route_id}`);
+        else alert(`No route found for: ${query}`);
+    } catch (e) {
+        alert('Search error. Please try again.');
     }
 }
 
-// General Event Listeners
-function initGeneralEvents() {
-    // Handle service card clicks
-    const serviceCards = document.querySelectorAll('.service-card a');
-    serviceCards.forEach(card => {
-        card.addEventListener('click', function(e) {
-            // Prevent default if needed, or add analytics/logging
-            console.log('Service card clicked:', this.textContent.trim());
-        });
-    });
-
-    // Handle route list clicks on routes-stops.html
-    const routeLinks = document.querySelectorAll('.list-group-item-action');
-    routeLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+// ========================================
+// SCHEDULE
+// ========================================
+function initRouteSelection() {
+    document.querySelectorAll('.route-card').forEach(card => {
+        const link = card.closest('a');
+        if (link) link.addEventListener('click', e => {
             e.preventDefault();
-            const routeName = this.querySelector('.route-name').textContent;
-            const routeDesc = this.querySelector('small').textContent;
-            showRouteDetails(routeName, routeDesc);
-        });
-    });
-
-    // Add any form submissions if present
-    const forms = document.querySelectorAll('form');
-    forms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Form submitted! (Demo)');
+            showRouteSchedule(link.getAttribute('href').substring(1));
         });
     });
 }
 
-// Show Route Details (for routes-stops.html)
-function showRouteDetails(routeName, routeDesc) {
-    const routeDetails = {
-        'Route 1': {
-            stops: ['Downtown Terminal', 'Main Street', 'Central Park', 'Valley Station'],
-            times: ['6:00 AM', '7:30 AM', '9:00 AM', '10:30 AM', '12:00 PM', '1:30 PM', '3:00 PM', '4:30 PM', '6:00 PM', '7:30 PM']
-        },
-        'Route 2': {
-            stops: ['Valley Station', 'University Ave', 'Campus Entrance', 'Library Stop'],
-            times: ['6:15 AM', '7:45 AM', '9:15 AM', '10:45 AM', '12:15 PM', '1:45 PM', '3:15 PM', '4:45 PM', '6:15 PM', '7:45 PM']
-        },
-        'Route 3': {
-            stops: ['Campus Entrance', 'Harbor View', 'Marina District', 'Harbor Terminal'],
-            times: ['6:30 AM', '8:00 AM', '9:30 AM', '11:00 AM', '12:30 PM', '2:00 PM', '3:30 PM', '5:00 PM', '6:30 PM', '8:00 PM']
-        },
-        'Route 4': {
-            stops: ['Harbor Terminal', 'Suburban Mall', 'Residential Area', 'Suburban Station'],
-            times: ['6:45 AM', '8:15 AM', '9:45 AM', '11:15 AM', '12:45 PM', '2:15 PM', '3:45 PM', '5:15 PM', '6:45 PM', '8:15 PM']
-        },
-        'Route 5': {
-            stops: ['Suburban Station', 'City Center', 'Business District', 'Downtown Terminal'],
-            times: ['7:00 AM', '8:30 AM', '10:00 AM', '11:30 AM', '1:00 PM', '2:30 PM', '4:00 PM', '5:30 PM', '7:00 PM', '8:30 PM']
-        }
+async function showRouteSchedule(routeId) {
+    const routeNum = routeId.replace('route', '');
+    try {
+        const res = await fetch(`${BACKEND_URL}/index.php/schedule?route_id=${routeNum}`);
+        const data = await res.json();
+        if (data.error) return alert(data.error);
+        
+        showModal(data.name, `
+            <h5>Departure Times:</h5>
+            <ul>${data.times.map(t => `<li>${t}</li>`).join('')}</ul>
+            <h5>Stops:</h5>
+            <ul>${data.stops.map(s => `<li>${s}</li>`).join('')}</ul>
+        `);
+    } catch (e) {
+        alert('Could not load schedule.');
+    }
+}
+
+// ========================================
+// SERVICE UPDATES (Home Page)
+// ========================================
+function initServiceUpdates() {
+    const container = document.getElementById('serviceUpdatesContainer');
+    if (!container) return;
+
+    fetch(`${BACKEND_URL}/index.php/updates`)
+        .then(r => r.json())
+        .then(data => {
+            if (data.error || !Array.isArray(data)) {
+                container.innerHTML = '<div class="alert alert-warning"><i class="fas fa-exclamation-triangle me-2"></i>Unable to load updates.</div>';
+                return;
+            }
+            displayUpdates(data, container);
+        })
+        .catch(() => {
+            container.innerHTML = '<div class="alert alert-warning"><i class="fas fa-exclamation-triangle me-2"></i>Unable to load updates.</div>';
+        });
+}
+
+function displayUpdates(updates, container) {
+    if (!updates.length) {
+        container.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-check-circle fa-2x mb-2 text-success"></i><p>All routes running normally.</p></div>';
+        return;
+    }
+
+    const getIcon = title => {
+        const t = title.toLowerCase();
+        if (t.includes('delay')) return ['fa-clock', 'text-danger'];
+        if (t.includes('maintenance') || t.includes('construction')) return ['fa-wrench', 'text-warning'];
+        if (t.includes('cancel')) return ['fa-times-circle', 'text-danger'];
+        return ['fa-info-circle', 'text-info'];
     };
 
-    const details = routeDetails[routeName];
-    if (details) {
-        let content = `<h4>${routeName}: ${routeDesc}</h4><h5>Stops:</h5><ul>`;
-        details.stops.forEach(stop => {
-            content += `<li>${stop}</li>`;
-        });
-        content += `</ul><h5>Departure Times:</h5><ul>`;
-        details.times.forEach(time => {
-            content += `<li>${time}</li>`;
-        });
-        content += `</ul>`;
-
-        // Display in a modal
-        const modal = document.createElement('div');
-        modal.className = 'modal fade';
-        modal.innerHTML = `
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">${routeName} Details</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">${content}</div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    container.innerHTML = updates.map((u, i) => {
+        const [icon, color] = getIcon(u.title);
+        const date = new Date(u.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        return `
+            <div class="update-item ${i < updates.length - 1 ? 'mb-3' : ''} p-4 bg-white rounded shadow-sm">
+                <div class="d-flex align-items-start">
+                    <div class="me-3"><i class="fas ${icon} ${color} fs-4"></i></div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
+                            <h5 class="mb-0 ${color}">${escapeHtml(u.title)}</h5>
+                            <small class="text-muted">${date}</small>
+                        </div>
+                        <p class="mb-0">${escapeHtml(u.message)}</p>
                     </div>
                 </div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        const bsModal = new bootstrap.Modal(modal);
-        bsModal.show();
-        modal.addEventListener('hidden.bs.modal', function() {
-            document.body.removeChild(modal);
-        });
-    }
+            </div>`;
+    }).join('');
 }
 
-// Bus Tracking Functionality
+// ========================================
+// NAVIGATION
+// ========================================
+function initNavigation() {
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', e => {
+            const target = document.getElementById(link.getAttribute('href').slice(1));
+            if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+        });
+    });
+    
+    // Active nav
+    const current = window.location.pathname.split('/').pop();
+    document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+        if (link.getAttribute('href') === current) link.classList.add('active');
+    });
+}
+
+// ========================================
+// BUS TRACKING
+// ========================================
 function initBusTracking() {
-    if (!window.location.pathname.includes('bus-tracking.html')) return;
+    const mapEl = document.getElementById('trackingMap');
+    if (!mapEl) return;
 
-    // Initialize map
-    initMap();
-
-    // Set up route selection
-    const routeSelect = document.getElementById('routeSelect');
-    if (routeSelect) {
-        routeSelect.addEventListener('change', function() {
-            const routeId = this.value;
-            if (routeId) {
-                loadRouteBuses(routeId);
-            } else {
-                clearBuses();
-            }
-        });
-    }
-
-    // Set up refresh button
-    const refreshBtn = document.getElementById('refreshBtn');
-    if (refreshBtn) {
-        refreshBtn.addEventListener('click', function() {
-            const routeId = routeSelect.value;
-            if (routeId) {
-                loadRouteBuses(routeId);
-            }
-        });
-    }
-
-    // Set up center button
-    const centerBtn = document.getElementById('centerBtn');
-    if (centerBtn) {
-        centerBtn.addEventListener('click', function() {
-            if (trackingMap) {
-                trackingMap.setView([44.6488, -63.5752], 12);
-            }
-        });
-    }
-}
-
-// Routes & Stops Map Functionality
-function initRoutesMap() {
-    if (!window.location.pathname.includes('routes-stops.html')) return;
-
-    // Initialize routes map
-    initRoutesMapView();
-    window.routeLayers = {};
-
-    // Set up route list interactions
-    const routeLinks = document.querySelectorAll('.route-link');
-    routeLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const routeName = this.getAttribute('data-route');
-            highlightRouteOnMap(routeName);
-        });
-    });
-
-    // Set up map controls
-    const refreshBtn = document.getElementById('refreshRoutesBtn');
-    if (refreshBtn) {
-        refreshBtn.addEventListener('click', function() {
-            // Refresh map data (simulate)
-            updateRoutesLastUpdate();
-        });
-    }
-
-    const centerBtn = document.getElementById('centerRoutesBtn');
-    if (centerBtn) {
-        centerBtn.addEventListener('click', function() {
-            if (window.routesMap) {
-                window.routesMap.setView([44.6488, -63.5752], 11);
-            }
-        });
-    }
-}
-
-// Initialize Routes Map
-function initRoutesMapView() {
-    const mapElement = document.getElementById('routesMap');
-    if (!mapElement) return;
-
-    // Initialize map centered on Halifax area
-    const routesMap = L.map('routesMap').setView([44.6488, -63.5752], 11);
-
-    // Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(routesMap);
-
-    // Add route paths and stops
-    addRoutePaths(routesMap);
-    addRouteStops(routesMap);
-
-    // Store map reference for interactions
-    window.routesMap = routesMap;
-}
-
-// Add route paths to map
-function addRoutePaths(map) {
-    const routeColors = {
-        'Route 1': '#233962', // Navy
-        'Route 2': '#dc3545', // Red
-        'Route 3': '#1a7f64', // Green
-        'Route 4': '#d63384', // Pink
-        'Route 5': '#ffc107'  // Yellow
-    };
-
-    const routePaths = {
-        'Route 1': [
-            [44.6488, -63.5752], // Downtown Terminal
-            [44.6490, -63.5760], // Main Street
-            [44.6475, -63.5735], // Central Park
-            [44.6460, -63.5710]  // Valley Station
-        ],
-        'Route 2': [
-            [44.6460, -63.5710], // Valley Station
-            [44.6360, -63.5910], // University Ave
-            [44.6350, -63.5890], // Campus Entrance
-            [44.6340, -63.5870]  // Library Stop
-        ],
-        'Route 3': [
-            [44.6350, -63.5890], // Campus Entrance
-            [44.6600, -63.5800], // Harbor View
-            [44.6650, -63.5850], // Marina District
-            [44.6700, -63.5900]  // Harbor Terminal
-        ],
-        'Route 4': [
-            [44.6700, -63.5900], // Harbor Terminal
-            [44.6800, -63.6000], // Suburban Mall
-            [44.6850, -63.6050], // Residential Area
-            [44.6900, -63.6100]  // Suburban Station
-        ],
-        'Route 5': [
-            [44.6900, -63.6100], // Suburban Station
-            [44.6550, -63.5750], // City Center
-            [44.6500, -63.5700], // Business District
-            [44.6488, -63.5752]  // Downtown Terminal
-        ]
-    };
-
-    // Store route layers for highlighting
-    window.routeLayers = {};
-
-    Object.keys(routePaths).forEach(routeName => {
-        const path = routePaths[routeName];
-        const color = routeColors[routeName];
-
-        const polyline = L.polyline(path, {
-            color: color,
-            weight: 4,
-            opacity: 0.8
-        }).addTo(map);
-
-        // Add route number markers
-        const routeNumber = routeName.split(' ')[1];
-        const midPoint = path[Math.floor(path.length / 2)];
-
-        const routeMarker = L.marker(midPoint, {
-            icon: L.divIcon({
-                className: 'route-number-marker',
-                html: `<div class="route-number-circle" style="background-color: ${color};">${routeNumber}</div>`,
-                iconSize: [30, 30],
-                iconAnchor: [15, 15]
-            })
-        }).addTo(map);
-
-        routeMarker.on('click', function() {
-            showRouteInfo(routeName);
-        });
-
-        window.routeLayers[routeName] = { polyline, marker: routeMarker };
-    });
-}
-
-// Add route stops to map
-function addRouteStops(map) {
-    const busStops = [
-        { name: 'Downtown Terminal', lat: 44.6488, lng: -63.5752, routes: ['Route 1', 'Route 5'] },
-        { name: 'Main Street', lat: 44.6490, lng: -63.5760, routes: ['Route 1'] },
-        { name: 'Central Park', lat: 44.6475, lng: -63.5735, routes: ['Route 1'] },
-        { name: 'Valley Station', lat: 44.6460, lng: -63.5710, routes: ['Route 1', 'Route 2'] },
-        { name: 'University Ave', lat: 44.6360, lng: -63.5910, routes: ['Route 2'] },
-        { name: 'Campus Entrance', lat: 44.6350, lng: -63.5890, routes: ['Route 2', 'Route 3'] },
-        { name: 'Library Stop', lat: 44.6340, lng: -63.5870, routes: ['Route 2'] },
-        { name: 'Harbor View', lat: 44.6600, lng: -63.5800, routes: ['Route 3'] },
-        { name: 'Marina District', lat: 44.6650, lng: -63.5850, routes: ['Route 3'] },
-        { name: 'Harbor Terminal', lat: 44.6700, lng: -63.5900, routes: ['Route 3', 'Route 4'] },
-        { name: 'Suburban Mall', lat: 44.6800, lng: -63.6000, routes: ['Route 4'] },
-        { name: 'Residential Area', lat: 44.6850, lng: -63.6050, routes: ['Route 4'] },
-        { name: 'Suburban Station', lat: 44.6900, lng: -63.6100, routes: ['Route 4', 'Route 5'] },
-        { name: 'City Center', lat: 44.6550, lng: -63.5750, routes: ['Route 5'] },
-        { name: 'Business District', lat: 44.6500, lng: -63.5700, routes: ['Route 5'] }
-    ];
-
-    busStops.forEach(stop => {
-        const stopIcon = L.divIcon({
-            className: 'bus-stop-marker',
-            html: '<i class="fas fa-map-marker-alt"></i>',
-            iconSize: [20, 20],
-            iconAnchor: [10, 20]
-        });
-
-        const marker = L.marker([stop.lat, stop.lng], { icon: stopIcon })
-            .addTo(map)
-            .bindPopup(`<b>${stop.name}</b><br>Routes: ${stop.routes.join(', ')}`);
-
-        marker.on('click', function() {
-            showStopInfo(stop);
-        });
-    });
-}
-
-// Highlight route on map when clicked from list
-function highlightRouteOnMap(routeName) {
-    if (!window.routeLayers || !window.routeLayers[routeName]) return;
-
-    // Reset all routes to normal opacity
-    Object.values(window.routeLayers).forEach(layer => {
-        layer.polyline.setStyle({ opacity: 0.8, weight: 4 });
-    });
-
-    // Highlight selected route
-    const selectedLayer = window.routeLayers[routeName];
-    selectedLayer.polyline.setStyle({ opacity: 1, weight: 6 });
-
-    // Center map on route
-    const bounds = selectedLayer.polyline.getBounds();
-    window.routesMap.fitBounds(bounds, { padding: [20, 20] });
-
-    // Show route info
-    showRouteInfo(routeName);
-}
-
-// Show route information in details panel
-function showRouteInfo(routeName) {
-    const routeDetails = {
-        'Route 1': {
-            description: 'Downtown - Valley',
-            stops: ['Downtown Terminal', 'Main Street', 'Central Park', 'Valley Station'],
-            frequency: 'Every 30 minutes',
-            firstBus: '6:00 AM',
-            lastBus: '7:30 PM'
-        },
-        'Route 2': {
-            description: 'Valley - Campus',
-            stops: ['Valley Station', 'University Ave', 'Campus Entrance', 'Library Stop'],
-            frequency: 'Every 30 minutes',
-            firstBus: '6:15 AM',
-            lastBus: '7:45 PM'
-        },
-        'Route 3': {
-            description: 'Campus - Harbor',
-            stops: ['Campus Entrance', 'Harbor View', 'Marina District', 'Harbor Terminal'],
-            frequency: 'Every 30 minutes',
-            firstBus: '6:30 AM',
-            lastBus: '8:00 PM'
-        },
-        'Route 4': {
-            description: 'Harbor - Suburban',
-            stops: ['Harbor Terminal', 'Suburban Mall', 'Residential Area', 'Suburban Station'],
-            frequency: 'Every 30 minutes',
-            firstBus: '6:45 AM',
-            lastBus: '8:15 PM'
-        },
-        'Route 5': {
-            description: 'Suburban - Downtown',
-            stops: ['Suburban Station', 'City Center', 'Business District', 'Downtown Terminal'],
-            frequency: 'Every 30 minutes',
-            firstBus: '7:00 AM',
-            lastBus: '8:30 PM'
-        }
-    };
-
-    const details = routeDetails[routeName];
-    if (details) {
-        const detailsPanel = document.getElementById('routeDetails');
-        if (detailsPanel) {
-            detailsPanel.innerHTML = `
-                <div class="route-info">
-                    <h6 class="mb-2">${routeName}: ${details.description}</h6>
-                    <p class="mb-2"><strong>Frequency:</strong> ${details.frequency}</p>
-                    <p class="mb-2"><strong>Service Hours:</strong> ${details.firstBus} - ${details.lastBus}</p>
-                    <p class="mb-1"><strong>Stops:</strong></p>
-                    <ul class="mb-0 small">
-                        ${details.stops.map(stop => `<li>${stop}</li>`).join('')}
-                    </ul>
-                </div>
-            `;
-        }
-    }
-}
-
-// Show stop information
-function showStopInfo(stop) {
-    const detailsPanel = document.getElementById('routeDetails');
-    if (detailsPanel) {
-        detailsPanel.innerHTML = `
-            <div class="stop-info">
-                <h6 class="mb-2">${stop.name}</h6>
-                <p class="mb-2"><strong>Routes:</strong> ${stop.routes.join(', ')}</p>
-                <p class="mb-0 small text-muted">Click on route numbers to view schedules</p>
-            </div>
-        `;
-    }
-}
-
-// Initialize Leaflet Map
-function initMap() {
-    const mapElement = document.getElementById('trackingMap');
-    if (!mapElement) return;
-
-    // Initialize map centered on Halifax area
     trackingMap = L.map('trackingMap').setView([44.6488, -63.5752], 12);
-
-    // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
+        attribution: '© OpenStreetMap'
     }).addTo(trackingMap);
-
-    // Add bus stop markers
-    addBusStops();
-}
-
-// Add bus stop markers to map
-function addBusStops() {
-    const busStops = [
-        { name: 'Downtown Terminal', lat: 44.6488, lng: -63.5752 },
-        { name: 'Main Street', lat: 44.6490, lng: -63.5760 },
-        { name: 'Central Park', lat: 44.6475, lng: -63.5735 },
-        { name: 'Valley Station', lat: 44.6460, lng: -63.5710 },
-        { name: 'University Ave', lat: 44.6360, lng: -63.5910 },
-        { name: 'Campus Entrance', lat: 44.6350, lng: -63.5890 },
-        { name: 'Library Stop', lat: 44.6340, lng: -63.5870 },
-        { name: 'Harbor View', lat: 44.6600, lng: -63.5800 },
-        { name: 'Marina District', lat: 44.6650, lng: -63.5850 },
-        { name: 'Harbor Terminal', lat: 44.6700, lng: -63.5900 },
-        { name: 'Suburban Mall', lat: 44.6800, lng: -63.6000 },
-        { name: 'Residential Area', lat: 44.6850, lng: -63.6050 },
-        { name: 'Suburban Station', lat: 44.6900, lng: -63.6100 },
-        { name: 'City Center', lat: 44.6550, lng: -63.5750 },
-        { name: 'Business District', lat: 44.6500, lng: -63.5700 }
-    ];
-
-    busStops.forEach(stop => {
+    
+    BUS_STOPS.forEach(stop => {
         L.marker([stop.lat, stop.lng])
             .addTo(trackingMap)
             .bindPopup(`<b>${stop.name}</b><br>Bus Stop`);
     });
+
+    document.getElementById('routeSelect')?.addEventListener('change', e => {
+        e.target.value ? loadRouteBuses(e.target.value) : clearBuses();
+    });
+    document.getElementById('refreshBtn')?.addEventListener('click', () => {
+        const sel = document.getElementById('routeSelect');
+        if (sel?.value) loadRouteBuses(sel.value);
+    });
+    document.getElementById('centerBtn')?.addEventListener('click', () => {
+        trackingMap?.setView([44.6488, -63.5752], 12);
+    });
 }
 
-// Load buses for selected route
 function loadRouteBuses(routeId) {
     clearBuses();
-
-    // Simulated bus data
+    
     const busData = {
-        route1: [
-            { id: 'R1-001', lat: 44.6488, lng: -63.5752, status: 'On Time', nextStop: 'Main Street' },
-            { id: 'R1-002', lat: 44.6475, lng: -63.5735, status: 'Delayed', nextStop: 'Valley Station' }
-        ],
-        route2: [
-            { id: 'R2-001', lat: 44.6360, lng: -63.5910, status: 'On Time', nextStop: 'Campus Entrance' },
-            { id: 'R2-002', lat: 44.6350, lng: -63.5890, status: 'On Time', nextStop: 'Library Stop' }
-        ],
-        route3: [
-            { id: 'R3-001', lat: 44.6600, lng: -63.5800, status: 'On Time', nextStop: 'Marina District' }
-        ],
-        route4: [
-            { id: 'R4-001', lat: 44.6800, lng: -63.6000, status: 'Delayed', nextStop: 'Residential Area' }
-        ],
-        route5: [
-            { id: 'R5-001', lat: 44.6550, lng: -63.5750, status: 'On Time', nextStop: 'Business District' }
-        ]
+        route1: [{ id: 'R1-001', lat: 44.6488, lng: -63.5752, status: 'On Time', next: 'Main Street' }],
+        route2: [{ id: 'R2-001', lat: 44.6360, lng: -63.5910, status: 'On Time', next: 'Campus Entrance' }],
+        route3: [{ id: 'R3-001', lat: 44.6600, lng: -63.5800, status: 'On Time', next: 'Marina District' }],
+        route4: [{ id: 'R4-001', lat: 44.6800, lng: -63.6000, status: 'Delayed', next: 'Residential Area' }],
+        route5: [{ id: 'R5-001', lat: 44.6550, lng: -63.5750, status: 'On Time', next: 'Business District' }]
     };
 
-    const buses = busData[routeId];
-    if (buses) {
-        buses.forEach(bus => {
-            addBusMarker(bus);
-        });
-        updateBusList(buses);
-        drawRoutePath(routeId);
-    }
-
-    updateLastUpdate();
-}
-
-// Add bus marker to map
-function addBusMarker(bus) {
-    const busIcon = L.divIcon({
-        className: 'bus-marker',
-        html: '<i class="fas fa-bus"></i>',
-        iconSize: [30, 30],
-        iconAnchor: [15, 15]
-    });
-
-    const marker = L.marker([bus.lat, bus.lng], { icon: busIcon })
-        .addTo(trackingMap)
-        .bindPopup(`
-            <b>Bus ${bus.id}</b><br>
-            Status: ${bus.status}<br>
-            Next Stop: ${bus.nextStop}
-        `);
-
-    busMarkers.push(marker);
-}
-
-// Update bus list in sidebar
-function updateBusList(buses) {
-    const busList = document.getElementById('busList');
-    if (!busList) return;
-
-    busList.innerHTML = '';
-
+    const buses = busData[routeId] || [];
     buses.forEach(bus => {
-        const busItem = document.createElement('div');
-        busItem.className = 'bus-item p-2 mb-2 border rounded';
-        busItem.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <strong>Bus ${bus.id}</strong><br>
-                    <small class="text-muted">Next: ${bus.nextStop}</small>
-                </div>
-                <span class="badge ${bus.status === 'On Time' ? 'bg-success' : 'bg-warning'}">${bus.status}</span>
-            </div>
-        `;
-        busList.appendChild(busItem);
+        const marker = L.marker([bus.lat, bus.lng], {
+            icon: L.divIcon({ className: 'bus-marker', html: '<i class="fas fa-bus"></i>', iconSize: [30, 30], iconAnchor: [15, 15] })
+        }).addTo(trackingMap).bindPopup(`<b>Bus ${bus.id}</b><br>Status: ${bus.status}<br>Next: ${bus.next}`);
+        busMarkers.push(marker);
     });
-}
 
-// Draw route path on map
-function drawRoutePath(routeId) {
-    const routePaths = {
-        route1: [
-            [44.6488, -63.5752], // Downtown Terminal
-            [44.6490, -63.5760], // Main Street
-            [44.6475, -63.5735], // Central Park
-            [44.6460, -63.5710]  // Valley Station
-        ],
-        route2: [
-            [44.6460, -63.5710], // Valley Station
-            [44.6360, -63.5910], // University Ave
-            [44.6350, -63.5890], // Campus Entrance
-            [44.6340, -63.5870]  // Library Stop
-        ],
-        route3: [
-            [44.6350, -63.5890], // Campus Entrance
-            [44.6600, -63.5800], // Harbor View
-            [44.6650, -63.5850], // Marina District
-            [44.6700, -63.5900]  // Harbor Terminal
-        ],
-        route4: [
-            [44.6700, -63.5900], // Harbor Terminal
-            [44.6800, -63.6000], // Suburban Mall
-            [44.6850, -63.6050], // Residential Area
-            [44.6900, -63.6100]  // Suburban Station
-        ],
-        route5: [
-            [44.6900, -63.6100], // Suburban Station
-            [44.6550, -63.5750], // City Center
-            [44.6500, -63.5700], // Business District
-            [44.6488, -63.5752]  // Downtown Terminal
-        ]
-    };
-
-    const path = routePaths[routeId];
-    if (path) {
-        const polyline = L.polyline(path, {
-            color: 'blue',
-            weight: 4,
-            opacity: 0.7
-        }).addTo(trackingMap);
-
+    // Draw route
+    const routeName = 'Route ' + routeId.replace('route', '');
+    const path = getRoutePath(routeName);
+    if (path.length) {
+        const polyline = L.polyline(path, { color: 'blue', weight: 4, opacity: 0.7 }).addTo(trackingMap);
         routePolylines.push(polyline);
     }
+
+    // Update UI
+    const list = document.getElementById('busList');
+    if (list) {
+        list.innerHTML = buses.map(b => `
+            <div class="bus-item p-2 mb-2 border rounded">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div><strong>Bus ${b.id}</strong><br><small class="text-muted">Next: ${b.next}</small></div>
+                    <span class="badge ${b.status === 'On Time' ? 'bg-success' : 'bg-warning'}">${b.status}</span>
+                </div>
+            </div>`).join('');
+    }
+    
+    const time = document.getElementById('lastUpdate');
+    if (time) time.textContent = new Date().toLocaleTimeString();
 }
 
-// Clear all bus markers and routes
 function clearBuses() {
-    busMarkers.forEach(marker => {
-        trackingMap.removeLayer(marker);
-    });
+    busMarkers.forEach(m => trackingMap.removeLayer(m));
+    routePolylines.forEach(p => trackingMap.removeLayer(p));
     busMarkers = [];
-
-    routePolylines.forEach(polyline => {
-        trackingMap.removeLayer(polyline);
-    });
     routePolylines = [];
-
-    const busList = document.getElementById('busList');
-    if (busList) {
-        busList.innerHTML = '';
-    }
+    const list = document.getElementById('busList');
+    if (list) list.innerHTML = '';
 }
 
-// Update last update timestamp
-function updateLastUpdate() {
-    const lastUpdateElement = document.getElementById('lastUpdate');
-    if (lastUpdateElement) {
-        const now = new Date();
-        lastUpdateElement.textContent = now.toLocaleTimeString();
-    }
+// ========================================
+// ROUTES MAP
+// ========================================
+function initRoutesMap() {
+    const mapEl = document.getElementById('routesMap');
+    if (!mapEl) return;
+
+    routesMap = L.map('routesMap').setView([44.6488, -63.5752], 11);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(routesMap);
+    
+    window.routeLayers = {};
+
+    // Add routes
+    Object.entries(ROUTE_DATA).forEach(([name, data]) => {
+        const path = getRoutePath(name);
+        if (!path.length) return;
+        
+        const polyline = L.polyline(path, { color: data.color, weight: 4, opacity: 0.8 }).addTo(routesMap);
+        const mid = path[Math.floor(path.length / 2)];
+        const marker = L.marker(mid, {
+            icon: L.divIcon({
+                className: 'route-number-marker',
+                html: `<div class="route-number-circle" style="background:${data.color}">${name.split(' ')[1]}</div>`,
+                iconSize: [30, 30], iconAnchor: [15, 15]
+            })
+        }).addTo(routesMap).on('click', () => showRouteInfo(name));
+        
+        window.routeLayers[name] = { polyline, marker };
+    });
+
+    // Add stops
+    BUS_STOPS.forEach(stop => {
+        L.marker([stop.lat, stop.lng], {
+            icon: L.divIcon({ className: 'bus-stop-marker', html: '<i class="fas fa-map-marker-alt"></i>', iconSize: [20, 20], iconAnchor: [10, 20] })
+        }).addTo(routesMap).bindPopup(`<b>${stop.name}</b><br>Routes: ${stop.routes.join(', ')}`);
+    });
+
+    // Route links
+    document.querySelectorAll('.route-link').forEach(link => {
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            highlightRoute(link.dataset.route);
+        });
+    });
+
+    document.getElementById('centerRoutesBtn')?.addEventListener('click', () => routesMap?.setView([44.6488, -63.5752], 11));
+    document.getElementById('refreshRoutesBtn')?.addEventListener('click', () => {
+        const el = document.getElementById('routesLastUpdate');
+        if (el) el.textContent = new Date().toLocaleTimeString();
+    });
 }
 
-// Update routes last update timestamp
-function updateRoutesLastUpdate() {
-    const routesLastUpdateElement = document.getElementById('routesLastUpdate');
-    if (routesLastUpdateElement) {
-        const now = new Date();
-        routesLastUpdateElement.textContent = now.toLocaleTimeString();
-    }
+function highlightRoute(name) {
+    if (!window.routeLayers?.[name]) return;
+    
+    Object.values(window.routeLayers).forEach(l => l.polyline.setStyle({ opacity: 0.8, weight: 4 }));
+    const layer = window.routeLayers[name];
+    layer.polyline.setStyle({ opacity: 1, weight: 6 });
+    routesMap.fitBounds(layer.polyline.getBounds(), { padding: [20, 20] });
+    showRouteInfo(name);
+}
+
+function showRouteInfo(name) {
+    const panel = document.getElementById('routeDetails');
+    if (!panel || !ROUTE_DATA[name]) return;
+    
+    const data = ROUTE_DATA[name];
+    const stops = BUS_STOPS.filter(s => s.routes.includes(name)).map(s => s.name);
+    
+    panel.innerHTML = `
+        <div class="route-info">
+            <h6 class="mb-2">${name}: ${data.desc}</h6>
+            <p class="mb-2"><strong>Frequency:</strong> Every 30 minutes</p>
+            <p class="mb-2"><strong>Hours:</strong> ${data.first} - ${data.last}</p>
+            <p class="mb-1"><strong>Stops:</strong></p>
+            <ul class="mb-0 small">${stops.map(s => `<li>${s}</li>`).join('')}</ul>
+        </div>`;
+}
+
+// ========================================
+// UTILITIES
+// ========================================
+function showModal(title, content) {
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.innerHTML = `
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">${title}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">${content}</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>`;
+    document.body.appendChild(modal);
+    const bsModal = new bootstrap.Modal(modal);
+    bsModal.show();
+    modal.addEventListener('hidden.bs.modal', () => modal.remove());
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }

@@ -11,66 +11,18 @@
 </head>
 <body>
     <div class="content-wrapper">
-        <!-- Full Width Search Bar -->
-        <div class="search-bar-section search-bar-padding">
-            <div class="container">
-                <div class="row align-items-center justify-content-end">
-                    <div class="col-md-3">
-                        <div class="input-group input-group-sm">
-                            <input type="text" class="form-control border-0 search-input">
-                            <button class="btn btn-light border-0 search-button" type="button">
-                                <i class="fas fa-search search-icon"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Navigation -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
-            <div class="container">
-                <a class="navbar-brand fw-bold navbar-brand-color" href="index.html">
-                    <i class="fas fa-bus me-2 navbar-icon-color"></i>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="schedule.html">Schedule</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="fares-passes.html">Fares & Passes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="routes-stops.html">Routes & Stops</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        <div id="shared-header"></div>
 
         <!-- Page Header -->
         <section class="py-5 fares-page-header">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 text-start text-white">
-                        <h3 class="fw-bold mb-3">
-                            Fares and Passes
-                        </h3>
+                        <h3 class="fw-bold mb-3">Fares and Passes</h3>
                     </div>
                     <div class="col-lg-4 text-lg-end">
                         <a href="contact.html" class="btn btn-lg px-4 py-3 fares-header-btn">
-                            <i class="fas fa-map-marker-alt me-2"></i>
-                            Where to Buy
+                            <i class="fas fa-map-marker-alt me-2"></i>Where to Buy
                         </a>
                     </div>
                 </div>
@@ -86,8 +38,7 @@
                         <div class="card shadow-sm border-0 fares-table-card">
                             <div class="card-header text-white text-center py-4 fares-table-header">
                                 <h2 class="mb-0 fw-bold">
-                                    <i class="fas fa-dollar-sign me-2 fares-table-icon"></i>
-                                    Current Fares
+                                    <i class="fas fa-dollar-sign me-2 fares-table-icon"></i>Current Fares
                                 </h2>
                             </div>
                             <div class="card-body p-0">
@@ -103,37 +54,25 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td class="py-4 px-4 fw-bold fare-type">
-                                                    <i class="fas fa-user me-2 fare-icon"></i>
-                                                    Adult
-                                                </td>
+                                                <td class="py-4 px-4 fw-bold fare-type"><i class="fas fa-user me-2 fare-icon"></i>Adult</td>
                                                 <td class="py-4 px-4 text-center fw-semibold fare-price-adult">$4.00</td>
                                                 <td class="py-4 px-4 text-center fw-semibold fare-price-adult">$35.00</td>
                                                 <td class="py-4 px-4 text-center fw-semibold fare-price-adult">$90.00</td>
                                             </tr>
                                             <tr>
-                                                <td class="py-4 px-4 fw-bold fare-type">
-                                                    <i class="fas fa-graduation-cap me-2 fare-icon"></i>
-                                                    Student / Senior
-                                                </td>
+                                                <td class="py-4 px-4 fw-bold fare-type"><i class="fas fa-graduation-cap me-2 fare-icon"></i>Student / Senior</td>
                                                 <td class="py-4 px-4 text-center fw-semibold fare-price-reduced">$2.25</td>
                                                 <td class="py-4 px-4 text-center fw-semibold fare-price-reduced">$20.00</td>
                                                 <td class="py-4 px-4 text-center fw-semibold fare-price-reduced">$65.00</td>
                                             </tr>
                                             <tr>
-                                                <td class="py-4 px-4 fw-bold fare-type">
-                                                    <i class="fas fa-child me-2 fare-icon"></i>
-                                                    Ages 5 - 11
-                                                </td>
+                                                <td class="py-4 px-4 fw-bold fare-type"><i class="fas fa-child me-2 fare-icon"></i>Ages 5 - 11</td>
                                                 <td class="py-4 px-4 text-center fw-semibold fare-price-reduced">$2.25</td>
                                                 <td class="py-4 px-4 text-center text-muted">—</td>
                                                 <td class="py-4 px-4 text-center text-muted">—</td>
                                             </tr>
                                             <tr>
-                                                <td class="py-4 px-4 fw-bold fare-type">
-                                                    <i class="fas fa-baby me-2 fare-icon"></i>
-                                                    Children Under 5
-                                                </td>
+                                                <td class="py-4 px-4 fw-bold fare-type"><i class="fas fa-baby me-2 fare-icon"></i>Children Under 5</td>
                                                 <td class="py-4 px-4 text-center fw-bold text-success" style="font-size: 1.2rem;">FREE</td>
                                                 <td class="py-4 px-4 text-center text-muted">—</td>
                                                 <td class="py-4 px-4 text-center text-muted">—</td>
@@ -157,10 +96,7 @@
                                     </div>
                                     <h4 class="mb-0 fw-bold">ID Requirements</h4>
                                 </div>
-                                <p class="mb-0">
-                                    Seniors (60+) and students must present valid ID when paying reduced fares. 
-                                    Students need a valid student ID card.
-                                </p>
+                                <p class="mb-0">Seniors (60+) and students must present valid ID when paying reduced fares.</p>
                             </div>
                         </div>
                     </div>
@@ -173,9 +109,7 @@
                                     </div>
                                     <h4 class="mb-0 fw-bold">No Expiry</h4>
                                 </div>
-                                <p class="mb-0">
-                                    Great news! Our tickets never expire. Buy in bulk and use them whenever you need them.
-                                </p>
+                                <p class="mb-0">Our tickets never expire. Buy in bulk and use them whenever you need.</p>
                             </div>
                         </div>
                     </div>
@@ -188,9 +122,7 @@
                                     </div>
                                     <h4 class="mb-0 fw-bold">Exact Change</h4>
                                 </div>
-                                <p class="mb-0">
-                                    Drivers cannot make change. Please have exact fare ready when boarding the bus.
-                                </p>
+                                <p class="mb-0">Drivers cannot make change. Please have exact fare ready.</p>
                             </div>
                         </div>
                     </div>
@@ -203,36 +135,28 @@
                             <div class="card-body p-5">
                                 <div class="text-center mb-4">
                                     <h2 class="fw-bold mb-3 where-to-buy-title">
-                                        <i class="fas fa-shopping-cart me-2 where-to-buy-icon"></i>
-                                        Where to Buy Tickets & Passes
+                                        <i class="fas fa-shopping-cart me-2 where-to-buy-icon"></i>Where to Buy Tickets & Passes
                                     </h2>
                                     <p class="lead text-muted mb-0">Multiple convenient locations to purchase your transit passes</p>
                                 </div>
-
                                 <div class="row g-4 mt-3">
                                     <div class="col-md-4">
                                         <div class="text-center p-4 rounded where-to-buy-option">
-                                            <div class="mb-3">
-                                                <i class="fas fa-bus fa-3x option-icon-orange"></i>
-                                            </div>
+                                            <i class="fas fa-bus fa-3x option-icon-orange mb-3"></i>
                                             <h5 class="fw-bold mb-2">On the Bus</h5>
                                             <p class="text-muted mb-0">Purchase directly from the driver with exact change</p>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="text-center p-4 rounded where-to-buy-option">
-                                            <div class="mb-3">
-                                                <i class="fas fa-building fa-3x option-icon-blue"></i>
-                                            </div>
+                                            <i class="fas fa-building fa-3x option-icon-blue mb-3"></i>
                                             <h5 class="fw-bold mb-2">Transit Office</h5>
                                             <p class="text-muted mb-0">Visit our main office for all ticket and pass options</p>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="text-center p-4 rounded where-to-buy-option">
-                                            <div class="mb-3">
-                                                <i class="fas fa-store fa-3x option-icon-orange"></i>
-                                            </div>
+                                            <i class="fas fa-store fa-3x option-icon-orange mb-3"></i>
                                             <h5 class="fw-bold mb-2">Ticket Agents</h5>
                                             <p class="text-muted mb-0">Authorized retailers throughout the region</p>
                                         </div>
@@ -251,10 +175,7 @@
                                 <i class="fas fa-exclamation-triangle fa-2x me-3 policy-notice-icon" style="margin-top: 5px;"></i>
                                 <div>
                                     <h5 class="fw-bold mb-2 policy-notice-text">Important Policy Notice</h5>
-                                    <p class="mb-0 policy-notice-text">
-                                        All tickets and passes sold are final. <strong>No refunds or exchanges are accepted.</strong> 
-                                        Please ensure you select the correct fare type before purchase.
-                                    </p>
+                                    <p class="mb-0 policy-notice-text">All tickets and passes sold are final. <strong>No refunds or exchanges.</strong></p>
                                 </div>
                             </div>
                         </div>
@@ -264,38 +185,10 @@
         </section>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>Regional Bus Transit</h5>
-                    <p class="mb-0"><small>Est. 2025</small></p>
-                </div>
-                <div class="col-md-6">
-                    <h6>Quick Links</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="schedule.html" class="text-white-50">Schedule Information</a></li>
-                        <li><a href="fares-passes.html" class="text-white-50">Fares & Passes</a></li>
-                        <li><a href="routes-stops.html" class="text-white-50">Routes & Stops</a></li>
-                        <li><a href="contact.html" class="text-white-50">Contact Us</a></li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="my-3">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <p class="mb-0">&copy; 2025 Regional Bus Transit | COMP-3303 Project</p>
-                    <small class="text-muted">Team: Amanda Kelly, Sadman Islam Aaraf, Eshaan Prakash</small>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <small class="text-muted">Inspired by Kings Transit Authority</small>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <div id="shared-footer"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="components.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
