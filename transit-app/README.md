@@ -92,12 +92,14 @@ cd transit-app
 
 2. **Start the servers**:
    ```bash
-   ./run.sh
-   ```
+   # Terminal 1 - Backend API
+   cd backend
+   php -S localhost:8001 router.php
 
-   This starts:
-   - Frontend server on **http://localhost:8000**
-   - Backend API server on **http://localhost:8001**
+   # Terminal 2 - Frontend
+   cd frontend
+   php -S localhost:8000
+   ```
 
 3. **Open your browser** and navigate to:
    ```
@@ -110,21 +112,6 @@ cd transit-app
 2. Enter password: `admin123`
 3. Manage routes and service updates
 
----
-
-Start servers manually (run script not made yet):
-
-```bash
-# Terminal 1 - Backend API
-cd backend
-php -S localhost:8001 router.php
-
-# Terminal 2 - Frontend
-cd frontend
-php -S localhost:8000
-```
-
----
 
 ## Project Structure
 
