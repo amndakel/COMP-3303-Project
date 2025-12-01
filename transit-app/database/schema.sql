@@ -1,8 +1,8 @@
--- Transit App Database Schema
+-- Bus App Database Schema
 
 -- Create database
-CREATE DATABASE IF NOT EXISTS transit_app;
-USE transit_app;
+CREATE DATABASE IF NOT EXISTS bus_app;
+USE bus_app;
 
 -- Routes table
 CREATE TABLE routes (
