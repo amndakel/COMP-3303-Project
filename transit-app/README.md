@@ -112,9 +112,7 @@ cd transit-app
 
 ---
 
-## Manual Server Start (Alternative)
-
-If the run script doesn't work, start servers manually:
+Start servers manually (run script not made yet):
 
 ```bash
 # Terminal 1 - Backend API
@@ -150,10 +148,7 @@ transit-app/
 │   ├── admin.js         # Admin functionality
 │   ├── components.js    # Shared header/footer
 │   └── style.css        # All styles
-├── run.sh               # Server startup script
 ├── README.md            # This file
-├── ARCH_LINUX_SETUP.md  # Arch Linux specific setup
-└── projectDetails.md    # Full documentation
 ```
 
 ---
@@ -221,10 +216,4 @@ For comprehensive documentation including:
 - Test cases
 - Code review
 
-See **[projectDetails.md](projectDetails.md)**
-
----
-
-## License
-
-COMP-3303 Project - Acadia University © 2025
+Used Obsidian for markdown coding.
